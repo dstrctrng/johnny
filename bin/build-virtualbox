@@ -1,0 +1,14 @@
+#!/bin/bash -e
+
+function v {
+  bundle exec vagrant "$@"
+}
+
+nm_box=$1; shift
+
+v basebox build "$nm_box" "$@"
+rm -f "$nm_box".box
+v basebox export "$nm_box"
+v box remove "$nm_box" 2>&1 || true
+v box add "$nm_box" "$nm_box.box"
+rm -f "$nm_box".box

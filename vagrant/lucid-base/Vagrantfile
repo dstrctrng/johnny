@@ -1,0 +1,5 @@
+Vagrant::Config.run do |config|
+  config.vm.box = "lucid-base"
+  config.ssh.username = "root"
+  config.vm.network ENV['VAGRANT_VM_NETWORK']
+end

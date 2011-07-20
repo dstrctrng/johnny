@@ -1,0 +1,42 @@
+#!/bin/bash -e
+
+function run_vagrant {
+  nm_cmd=$1; shift
+  case "$nm_cmd" in
+    ssh)
+      ssh -F <(pushd $p 1>&-; bin/support ssh_config | sed 's#Host vagrant#Host support#'; popd 1>&-) -o UserKnownHostsFile=$p/v/support/.ssh_known_hosts support "$@"
+      ;;
+    scp)
+      scp -F <(pushd $p 1>&-; bin/support ssh_config | sed 's#Host vagrant#Host support#'; popd 1>&-) -o UserKnownHostsFile=$p/v/support/.ssh_known_hosts support "$@"
+      ;;
+    up)
+      export VAGRANT_VM_NETWORK=$1; shift
+      bundle exec vagrant $nm_cmd "$@"
+      ;;
+    *)
+      bundle exec vagrant $nm_cmd "$@"
+      ;;
+  esac
+}
+
+pth_v="$(pwd)/vagrant"
+
+[[ -d $pth_v ]] || pth_v="$HOME/vagrant"
+
+if [[ -d $pth_v ]]; then
+  if [[ -d $pth_v/$1 ]]; then
+  	nm_box=$1; shift
+    cd $pth_v/$nm_box
+    if [[ -z $1 ]]; then
+    	[[ -f .vagrant ]] || run_vagrant up
+      run_vagrant ssh
+    else
+      run_vagrant "$@"
+    fi
+  else
+    run_vagrant "$@"
+  fi
+else
+  run_vagrant "$@"
+fi
+

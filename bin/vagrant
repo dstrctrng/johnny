@@ -1,13 +1,16 @@
 #!/bin/bash -e
 
+[[ -z $cmd_wrapper ]] && export cmd_wrapper=$0
+echo $cmd_wrapper | egrep '^/' || cmd_wrapper="$(pwd)/$cmd_wrapper"
+
 function run_vagrant {
   nm_cmd=$1; shift
   case "$nm_cmd" in
     ssh)
-      ssh -F <(pushd $p 1>&-; bin/support ssh_config | sed 's#Host vagrant#Host support#'; popd 1>&-) -o UserKnownHostsFile=$p/v/support/.ssh_known_hosts support "$@"
+      ssh -F <($cmd_wrapper $nm_box ssh_config | sed "s#Host vagrant#Host $nm_box#") -o UserKnownHostsFile=$p/vagrant/$nm_box/.ssh_known_hosts $nm_box "$@"
       ;;
     scp)
-      scp -F <(pushd $p 1>&-; bin/support ssh_config | sed 's#Host vagrant#Host support#'; popd 1>&-) -o UserKnownHostsFile=$p/v/support/.ssh_known_hosts support "$@"
+      scp -F <($cmd_wrapper $nm_box ssh_config | sed "s#Host vagrant#Host $nm_box#") -o UserKnownHostsFile=$p/vagrant/$nm_box/.ssh_known_hosts $nm_box "$@"
       ;;
     up)
       export VAGRANT_VM_NETWORK=$1; shift
@@ -19,14 +22,12 @@ function run_vagrant {
   esac
 }
 
-pth_v="$(pwd)/vagrant"
+pth_vagrant="$(pwd)/vagrant"
 
-[[ -d $pth_v ]] || pth_v="$HOME/vagrant"
-
-if [[ -d $pth_v ]]; then
-  if [[ -d $pth_v/$1 ]]; then
+if [[ -d $pth_vagrant ]]; then
+  if [[ -d $pth_vagrant/$1 ]]; then
   	nm_box=$1; shift
-    cd $pth_v/$nm_box
+    cd $pth_vagrant/$nm_box
     if [[ -z $1 ]]; then
     	[[ -f .vagrant ]] || run_vagrant up
       run_vagrant ssh

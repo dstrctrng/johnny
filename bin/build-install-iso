@@ -10,8 +10,11 @@ chmod u+w iso/$nm_build.src/isolinux/isolinux.bin
 rsync -ia definitions/$nm_box/preseed.cfg iso/$nm_build.src/preseed/
 rsync -ia definitions/$nm_box/isolinux.cfg iso/$nm_build.src/isolinux/
 
-cd iso/$nm_build.src
-sudo mkisofs \
+pth_iso="$(pwd)/iso/$nm_build.iso"
+pushd iso/$nm_build.src > /dev/null
+mkisofs \
   -r -V "$nm_build" \
   -cache-inodes -J -l -b isolinux/isolinux.bin -c isolinux/boot.cat \
-  -no-emul-boot -boot-load-size 4 -boot-info-table -o "../$nm_build.iso" .
+  -no-emul-boot -boot-load-size 4 -boot-info-table -o "$pth_iso" .
+popd > /dev/null
+

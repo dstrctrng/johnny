@@ -6,6 +6,7 @@ bundle exec vagrant basebox build "$nm_box" "$@"
 
 rm -f "$nm_box".box
 bundle exec vagrant basebox export "$nm_box"
+bundle exec vagrant basebox destroy "$nm_box"
 
 bundle exec vagrant box remove "$nm_box" 2>&1 || true
 bundle exec vagrant box add "$nm_box" "$nm_box.box"

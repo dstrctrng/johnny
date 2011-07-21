@@ -10,6 +10,12 @@ function run_vagrant {
       tmp_config=$(mktemp -t XXXXXX)
       $cmd_wrapper ssh_config > $tmp_config
 
+      if [[ .vagrant -nt .ssh_known_hosts ]]; then
+        port=$(run_vagrant ssh_config | awk '$1 == "Port" { print $2 }')
+        hostname=$(run_vagrant ssh_config | awk '$1 == "HostName" { print $2 }')
+        ssh-keyscan -p $port $hostname,"[$hostname]:$port" 2>&- > .ssh_known_hosts
+      fi
+
       case "$nm_cmd" in
         ssh) ssh -F $tmp_config -o UserKnownHostsFile=.ssh_known_hosts vagrant "$@" ;;
         scp) scp -F $tmp_config -o UserKnownHostsFile=.ssh_known_hosts "$1" vagrant:"$2" ;;

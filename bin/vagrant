@@ -17,8 +17,8 @@ function run_vagrant {
       fi
 
       case "$nm_cmd" in
-        ssh) ssh -F $tmp_config -o UserKnownHostsFile=.ssh_known_hosts vagrant "$@" ;;
-        scp) scp -F $tmp_config -o UserKnownHostsFile=.ssh_known_hosts "$1" vagrant:"$2" ;;
+        ssh) ssh -F $tmp_config -o UserKnownHostsFile=.ssh_known_hosts default "$@" ;;
+        scp) scp -F $tmp_config -o UserKnownHostsFile=.ssh_known_hosts "$1" default:"$2" ;;
       esac
 
       rm -f $tmp_config

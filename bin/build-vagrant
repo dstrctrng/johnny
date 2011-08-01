@@ -3,6 +3,34 @@
 nm_box=$1; shift
 
 bundle exec vagrant basebox build "$nm_box" "$@"
+sleep 60 # TODO got an FFI error last time:
+#         vendor/bundle/ruby/1.8/gems/virtualbox-0.9.1/lib/virtualbox/com/implementer/ffi.rb:106:in `call_and_check': Error in API call to lock_machine: 2159738887 (VirtualBox::Exceptions::InvalidObjectStateException)
+#    from vendor/bundle/ruby/1.8/gems/virtualbox-0.9.1/lib/virtualbox/com/implementer/ffi.rb:80:in `call_vtbl_function'
+#    from vendor/bundle/ruby/1.8/gems/virtualbox-0.9.1/lib/virtualbox/com/implementer/ffi.rb:61:in `call_function'
+#    from vendor/bundle/ruby/1.8/gems/virtualbox-0.9.1/lib/virtualbox/com/abstract_interface.rb:145:in `call_function'
+#    from vendor/bundle/ruby/1.8/gems/virtualbox-0.9.1/lib/virtualbox/com/abstract_interface.rb:62:in `lock_machine'
+#    from vendor/bundle/ruby/1.8/gems/virtualbox-0.9.1/lib/virtualbox/vm.rb:409:in `with_open_session'
+#    from vendor/bundle/ruby/1.8/gems/virtualbox-0.9.1/lib/virtualbox/network_adapter.rb:144:in `modify_adapter'
+#    from vendor/bundle/ruby/1.8/gems/virtualbox-0.9.1/lib/virtualbox/nat_engine.rb:66:in `modify_engine'
+#    from vendor/bundle/ruby/1.8/gems/virtualbox-0.9.1/lib/virtualbox/nat_forwarded_port.rb:141:in `save'
+#    from vendor/bundle/ruby/1.8/gems/veewee-0.2.0/lib/veewee/session.rb:412:in `add_ssh_nat_mapping'
+#    from vendor/bundle/ruby/1.8/gems/veewee-0.2.0/lib/veewee/session.rb:207:in `export_box'
+#    from vendor/bundle/ruby/1.8/gems/veewee-0.2.0/lib/veewee/command.rb:68:in `export'
+#    from vendor/bundle/ruby/1.8/gems/thor-0.14.6/lib/thor/task.rb:22:in `send'
+#    from vendor/bundle/ruby/1.8/gems/thor-0.14.6/lib/thor/task.rb:22:in `run'
+#    from vendor/bundle/ruby/1.8/gems/thor-0.14.6/lib/thor/invocation.rb:118:in `invoke_task'
+#    from vendor/bundle/ruby/1.8/gems/thor-0.14.6/lib/thor.rb:263:in `dispatch'
+#    from vendor/bundle/ruby/1.8/gems/thor-0.14.6/lib/thor/invocation.rb:109:in `send'
+#    from vendor/bundle/ruby/1.8/gems/thor-0.14.6/lib/thor/invocation.rb:109:in `invoke'
+#    from vendor/bundle/ruby/1.8/gems/thor-0.14.6/lib/thor.rb:205:in `basebox'
+#    from vendor/bundle/ruby/1.8/gems/thor-0.14.6/lib/thor/task.rb:22:in `send'
+#    from vendor/bundle/ruby/1.8/gems/thor-0.14.6/lib/thor/task.rb:22:in `run'
+#    from vendor/bundle/ruby/1.8/gems/thor-0.14.6/lib/thor/invocation.rb:118:in `invoke_task'
+#    from vendor/bundle/ruby/1.8/gems/thor-0.14.6/lib/thor.rb:263:in `dispatch'
+#    from vendor/bundle/ruby/1.8/gems/thor-0.14.6/lib/thor/base.rb:389:in `start'
+#    from vendor/bundle/ruby/1.8/gems/vagrant-0.8.2/bin/vagrant:21
+#    from vendor/bundle/ruby/1.8/bin/vagrant:19:in `load'
+#    from vendor/bundle/ruby/1.8/bin/vagrant:19
 
 rm -f "$nm_box".box
 bundle exec vagrant basebox export "$nm_box"

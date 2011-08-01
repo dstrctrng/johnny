@@ -2,7 +2,7 @@
 
 nm_box=$1; shift
 
-bundle exec vagrant basebox build "${nm_box}_veewee" "$@"
+bundle exec vagrant basebox build "${nm_box}_veewee" -f "$@"
 sleep 60 # TODO got an FFI error last time:
 #         vendor/bundle/ruby/1.8/gems/virtualbox-0.9.1/lib/virtualbox/com/implementer/ffi.rb:106:in `call_and_check': Error in API call to lock_machine: 2159738887 (VirtualBox::Exceptions::InvalidObjectStateException)
 #    from vendor/bundle/ruby/1.8/gems/virtualbox-0.9.1/lib/virtualbox/com/implementer/ffi.rb:80:in `call_vtbl_function'
@@ -34,7 +34,6 @@ sleep 60 # TODO got an FFI error last time:
 
 rm -f "${nm_box}_veewee".box
 bundle exec vagrant basebox export "${nm_box}_veewee"
-bundle exec vagrant basebox destroy "${nm_box}_veewee"
 
 bundle exec vagrant box remove "${nm_box}_vagrant" 2>&1 || true
 bundle exec vagrant box add "${nm_box}_vagrant" "${nm_box}_veewee.box"

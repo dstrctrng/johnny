@@ -12,5 +12,6 @@ for a in "$@"; do
   bin/build-ubuntu $a
   bin/build-vagrant $a -f
   eval bin/vagrant $a up '"''$'"${a}_ip"'"'
+  bin/vagrant $a ssh bash postinstall.sh vagrant
 done
 

@@ -8,8 +8,9 @@
 bundle config build.nokogiri --with-xslt-dir=/opt/zendesk/macports/local
 bundle check || bundle --local --path vendor/bundle
 
-for a in lucid natty; do
+for a in "$@"; do
   bin/build-ubuntu $a
   bin/build-vagrant $a -f
+  eval bin/vagrant $a up '"''$'"${a}_ip"'"'
 done
 

@@ -9,9 +9,20 @@ bundle config build.nokogiri --with-xslt-dir=/opt/zendesk/macports/local
 bundle check || bundle --local --path vendor/bundle
 
 for a in "$@"; do
+	nm_build=$(basename $(cat definitions/${a}_veewee/definition.rb  | grep iso_file | cut -d'"' -f2) .iso) # TODO weak
+  url_build=$(cat definitions/${a}_veewee/definition.rb  | grep iso_src | cut -d'"' -f2) # TODO weak
+  wget -c "$url_build" -O "iso/$nm_build.download.iso" # 404 does not return error code
+  [[ -s "iso/$nm_build.download.iso" ]] || exit 1
+  hdiutil mount -mountpoint "$(pwd)/iso/$nm_build.mnt" "iso/$nm_build.download.iso"
+  sudo rm -rf "iso/$nm_build.src"
+  sudo rsync -ia "iso/$nm_build.mnt/." "iso/$nm_build.src/"
+  sudo chown -R $(id -un):$(id -gn) "iso/$nm_build.src"
+  hdiutil unmount "$(pwd)/iso/$nm_build.mnt"
+
   bin/build-ubuntu $a
-  bin/build-vagrant $a -f
-  eval bin/vagrant ${a}_vagrant up '"''$'"${a}_ip"'"'
-  bin/vagrant ${a}_vagrant ssh bash postinstall.sh vagrant
+  #bin/build-vagrant $a -f
+  #eval bin/vagrant ${a}_vagrant up '"''$'"${a}_ip"'"'
+  #bin/vagrant ${a}_vagrant ssh bash postinstall.sh vagrant
 done
+
 

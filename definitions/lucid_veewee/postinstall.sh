@@ -2,6 +2,8 @@
 
 # most of this script taken from veewee, vagrant
 
+export DEBIAN_FRONTEND="noninteractive"
+
 # udev cleanup
 rm -f /etc/udev/rules.d/70-persistent-net.rules
 mkdir -p /etc/udev/rules.d/70-persistent-net.rules

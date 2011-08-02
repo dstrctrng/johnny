@@ -2,6 +2,7 @@
 
 nm_box=$1; shift
 
+VBoxManage unregistervm ${nm_box}_veewee --delete || true
 bundle exec vagrant basebox build "${nm_box}_veewee" -f "$@"
 sleep 60 # TODO got an FFI error last time:
 #         vendor/bundle/ruby/1.8/gems/virtualbox-0.9.1/lib/virtualbox/com/implementer/ffi.rb:106:in `call_and_check': Error in API call to lock_machine: 2159738887 (VirtualBox::Exceptions::InvalidObjectStateException)

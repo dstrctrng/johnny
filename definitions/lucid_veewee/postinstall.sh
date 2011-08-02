@@ -2,6 +2,15 @@
 
 # most of this script taken from veewee, vagrant
 
+# udev cleanup
+rm -f /etc/udev/rules.d/70-persistent-net.rules
+mkdir -p /etc/udev/rules.d/70-persistent-net.rules
+rm -rf /dev/.udev/
+rm -f /lib/udev/rules.d/75-persistent-net-generator.rules
+
+# dhcp cleanup
+rm -f /var/lib/dhcp3/*
+
 if [[ -z $1 ]]; then # STAGE 1: during veewee build, and copied to ~/ so stage 2 can be called during vagrant
   # vagrant ssh key
   mkdir -p ~/.ssh
@@ -14,15 +23,6 @@ EOF
   aptitude update
   aptitude upgrade -y
   aptitude clean
-
-  # udev cleanup
-  rm -f /etc/udev/rules.d/70-persistent-net.rules
-  mkdir -p /etc/udev/rules.d/70-persistent-net.rules
-  rm -rf /dev/.udev/
-  rm -f /lib/udev/rules.d/75-persistent-net-generator.rules
-
-  # dhcp cleanup
-  rm /var/lib/dhcp3/*
 
   # dhcp delays
   echo "pre-up sleep 2" >> /etc/network/interfaces
@@ -39,4 +39,7 @@ else # STAGE 2: during vagrant after rebooting into updated kernel
   umount /mnt
 
   rm $pth_vguest
+
+  poweroff
 fi
+

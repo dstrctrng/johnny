@@ -20,9 +20,9 @@ for a in "$@"; do
   hdiutil unmount "$(pwd)/iso/$nm_build.mnt"
 
   bin/build-ubuntu $a
-  #bin/build-vagrant $a -f
-  #eval bin/vagrant ${a}_vagrant up '"''$'"${a}_ip"'"'
-  #bin/vagrant ${a}_vagrant ssh bash postinstall.sh vagrant
+  bin/build-vagrant $a -f
+  eval bin/vagrant ${a}_vagrant up '"''$'"${a}_ip"'"'
+  bin/vagrant ${a}_vagrant ssh bash postinstall.sh vagrant
 done
 
 

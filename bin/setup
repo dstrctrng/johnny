@@ -5,6 +5,19 @@
 	exit 1
 }
 
+# TODO where to put site specific config?
+vboxnet="$(ifconfig vboxnet0 2>&- | grep 'inet ' | awk '{print $2}' | cut -d. -f1-3)"
+if [[ -z $vboxnet ]]; then
+  vboxif="$(ifconfig vboxnet0 2>&- | head -1 | cut -d: -f1)"
+  [[ -z $vboxif ]] && VBoxManage hostonlyif create
+
+	vboxnet="192.168.56"
+	VBoxManage hostonlyif ipconfig vboxnet0 --ip $vboxnet.1 --netmask 255.255.255.0
+fi
+
+export lucid_ip="$vboxnet.111"
+export natty_ip="$vboxnet.112"
+
 bundle config build.nokogiri --with-xslt-dir=/opt/zendesk/macports/local
 bundle check || bundle --local --path vendor/bundle
 

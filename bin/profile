@@ -1,0 +1,20 @@
+#!/bin/bash
+
+tmp_aliases=$(mktemp -t XXXXXX)
+
+for pth_vagrant in vagrant/*; do
+	[[ -d $pth_vagrant ]] || continue
+	nm_vagrant=${pth_vagrant##*/}
+  cat >> $tmp_aliases << EOF
+  function ${nm_vagrant%_vagrant} {
+    pushd $(pwd)/ubuntu > /dev/null
+    bin/vagrant $nm_vagrant ssh "\$@"
+    popd > /dev/null
+  }
+EOF
+done
+unset pth_vagrant
+
+source $tmp_aliases
+rm -f $tmp_aliases
+

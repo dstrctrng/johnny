@@ -1,5 +1,5 @@
 Vagrant::Config.run do |config|
-  config.vm.box = "natty"
+  config.vm.box = "natty_vagrant"
   config.ssh.username = "root"
   config.vm.network ENV['VAGRANT_VM_NETWORK']
 end

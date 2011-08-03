@@ -7,7 +7,7 @@ for pth_vagrant in vagrant/*; do
 	nm_vagrant=${pth_vagrant##*/}
   cat >> $tmp_aliases << EOF
   function ${nm_vagrant%_vagrant} {
-    pushd $(pwd)/ubuntu > /dev/null
+    pushd $(pwd) > /dev/null
     bin/vagrant $nm_vagrant ssh "\$@"
     popd > /dev/null
   }

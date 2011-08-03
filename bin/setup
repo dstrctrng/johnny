@@ -12,11 +12,11 @@ if [[ -z $vboxnet ]]; then
   [[ -z $vboxif ]] && VBoxManage hostonlyif create
 
 	vboxnet="192.168.56"
-	VBoxManage hostonlyif ipconfig vboxnet0 --ip $vboxnet.1 --netmask 255.255.255.0
+	VBoxManage hostonlyif ipconfig vboxnet0 --ip $vboxnet.100 --netmask 255.255.255.0
 fi
 
-export lucid_ip="$vboxnet.111"
-export natty_ip="$vboxnet.112"
+export lucid_ip="$vboxnet.99"
+export natty_ip="$vboxnet.98"
 
 bundle config build.nokogiri --with-xslt-dir=/opt/zendesk/macports/local
 bundle check || bundle --local --path vendor/bundle

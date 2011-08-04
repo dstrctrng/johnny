@@ -5,25 +5,28 @@
 	exit 1
 }
 
-# TODO where to put site specific config?
-vboxnet="$(ifconfig vboxnet0 2>&- | grep 'inet ' | awk '{print $2}' | cut -d. -f1-3)"
-if [[ -z $vboxnet ]]; then
-  vboxif="$(ifconfig vboxnet0 2>&- | head -1 | cut -d: -f1)"
-  [[ -z $vboxif ]] && VBoxManage hostonlyif create
-
-	vboxnet="192.168.56"
-	VBoxManage hostonlyif ipconfig vboxnet0 --ip $vboxnet.100 --netmask 255.255.255.0
-fi
-
-export lucid_ip="$vboxnet.99"
-export natty_ip="$vboxnet.98"
-
+figlet "ubuntu bundle"
 bundle config build.nokogiri --with-xslt-dir=/opt/zendesk/macports/local
 bundle check || bundle --local --path vendor/bundle
 
+vboxnet_if="vboxnet0" # TODO allow user to specify their own vboxnet interface
+vboxnet_default="192.168.56" # TODO let virtualbox find a non-conflicting network?
+
+figlet "vbox network"
+export vboxnet="$(ifconfig "$vboxnet_if" 2>&- | grep 'inet ' | awk '{print $2}' | cut -d. -f1-3)"
+if [[ -z $vboxnet ]]; then
+  vboxif="$(ifconfig "$vboxnet_if" 2>&- | head -1 | cut -d: -f1)"
+  [[ -z $vboxif ]] && VBoxManage hostonlyif create
+
+	vboxnet=$vboxnet_default
+	VBoxManage hostonlyif ipconfig "$vboxnet_if" --ip $vboxnet.100 --netmask 255.255.255.0
+fi
+
 for a in "$@"; do
+  figlet "building $a"
 	nm_build=$(basename $(cat definitions/${a}_veewee/definition.rb  | grep iso_file | cut -d'"' -f2) .iso) # TODO weak
   url_build=$(cat definitions/${a}_veewee/definition.rb  | grep iso_src | cut -d'"' -f2) # TODO weak
+  source "config/${a}"
 
   figlet "download iso"
   wget -c "$url_build" -O "iso/$nm_build.download.iso" # 404 does not return error code

@@ -46,16 +46,16 @@ for a in "$@"; do
   fi
 
   figlet "build install"
-  bin/build-ubuntu $a
+  #bin/build-ubuntu $a
 
   figlet "build vagrant"
-  bin/build-vagrant $a -f
+  #bin/build-vagrant $a -f
 
   figlet "start vagrant"
-  eval bin/vagrant $vagrant_name up '"''$'"${a}_ip"'"'
+  eval bin/vagrant $a up '"''$'"${a}_ip"'"'
 
   figlet "postinstall"
-  bin/vagrant $vagrant_name ssh bash postinstall.sh vagrant
+  bin/vagrant $a ssh bash postinstall.sh vagrant
 done
 
 

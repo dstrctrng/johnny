@@ -2,13 +2,17 @@
 
 tmp_aliases=$(mktemp -t XXXXXX)
 
-for pth_vagrant in vagrant/*; do
+for pth_config in config/*; do
+	[[ -f $pth_config ]] || continue
+	source $pth_config
+
+	pth_vagrant=$(pwd)/vagrant/$vagrantname
 	[[ -d $pth_vagrant ]] || continue
-	nm_vagrant=${pth_vagrant##*/}
+
   cat >> $tmp_aliases << EOF
-  function ${nm_vagrant%_vagrant} {
+  function ${pth_config##*/} {
     pushd $(pwd) > /dev/null
-    bin/vagrant $nm_vagrant ssh "\$@"
+    bin/vagrant $vagrant_name ssh "\$@"
     popd > /dev/null
   }
 EOF

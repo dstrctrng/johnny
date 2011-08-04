@@ -24,9 +24,12 @@ fi
 
 for a in "$@"; do
   figlet "building $a"
-	nm_build=$(basename $(cat definitions/${a}_veewee/definition.rb  | grep iso_file | cut -d'"' -f2) .iso) # TODO weak
-  url_build=$(cat definitions/${a}_veewee/definition.rb  | grep iso_src | cut -d'"' -f2) # TODO weak
+
   source "config/${a}"
+  export veewee_name vagrant_name
+
+	nm_build=$(basename $(cat definitions/${veewee_name}/definition.rb  | grep iso_file | cut -d'"' -f2) .iso) # TODO weak
+  url_build=$(cat definitions/${veewee_name}/definition.rb  | grep iso_src | cut -d'"' -f2) # TODO weak
 
   figlet "download iso"
   wget -c "$url_build" -O "iso/$nm_build.download.iso" # 404 does not return error code
@@ -49,10 +52,10 @@ for a in "$@"; do
   bin/build-vagrant $a -f
 
   figlet "start vagrant"
-  eval bin/vagrant ${a}_vagrant up '"''$'"${a}_ip"'"'
+  eval bin/vagrant $vagrant_name up '"''$'"${a}_ip"'"'
 
   figlet "postinstall"
-  bin/vagrant ${a}_vagrant ssh bash postinstall.sh vagrant
+  bin/vagrant $vagrant_name ssh bash postinstall.sh vagrant
 done
 
 

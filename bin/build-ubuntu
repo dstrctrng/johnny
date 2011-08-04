@@ -1,14 +1,14 @@
 #!/bin/bash -e
 
 nm_box=$1; shift
-nm_build=$(basename $(cat definitions/${nm_box}_veewee/definition.rb  | grep iso_file | cut -d'"' -f2) .iso) # TODO weak
+nm_build=$(basename $(cat definitions/$veewee_name/definition.rb  | grep iso_file | cut -d'"' -f2) .iso) # TODO weak
 
 mkdir -p iso/$nm_build.src/{preseed,isolinux}
 chmod u+w iso/$nm_build.src/{preseed,isolinux}
 chmod u+w iso/$nm_build.src/isolinux/isolinux.bin
 
-rsync -ia definitions/${nm_box}_veewee/preseed.cfg iso/$nm_build.src/preseed/
-rsync -ia definitions/${nm_box}_veewee/isolinux.cfg iso/$nm_build.src/isolinux/
+rsync -ia definitions/$veewee_name/preseed.cfg iso/$nm_build.src/preseed/
+rsync -ia definitions/$veewee_name/isolinux.cfg iso/$nm_build.src/isolinux/
 
 pth_iso="$(pwd)/iso/$nm_build.iso"
 pushd iso/$nm_build.src > /dev/null

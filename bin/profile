@@ -9,10 +9,11 @@ for pth_config in config/*; do
 	pth_vagrant=$(pwd)/vagrant/$vagrantname
 	[[ -d $pth_vagrant ]] || continue
 
+  nm_vagrant="${pth_config##*/}"
   cat >> $tmp_aliases << EOF
-  function ${pth_config##*/} {
+  function $nm_vagrant {
     pushd $(pwd) > /dev/null
-    bin/vagrant $vagrant_name ssh "\$@"
+    bin/vagrant $nm_vagrant ssh "\$@"
     popd > /dev/null
   }
 EOF

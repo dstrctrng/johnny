@@ -3,6 +3,8 @@
 [[ -z $cmd_wrapper ]] && export cmd_wrapper=$0
 echo $cmd_wrapper | egrep -q '^/' || cmd_wrapper="$(pwd)/$cmd_wrapper"
 
+export BUNDLE_GEMFILE=$(pwd)/Gemfile
+
 function run_vagrant {
   nm_cmd=$1; shift
   case "$nm_cmd" in

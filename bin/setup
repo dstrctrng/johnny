@@ -1,10 +1,5 @@
 #!/bin/bash -e
 
-[[ -d .git ]] || {
-	echo "ERROR: must be at root of git workarea" 1>&2
-	exit 1
-}
-
 figlet "ubuntu bundle"
 bundle config build.nokogiri --with-xslt-dir=/opt/zendesk/macports/local
 bundle check || bundle --local --path vendor/bundle
@@ -46,16 +41,12 @@ for a in "$@"; do
   fi
 
   figlet "build install"
-  #bin/build-ubuntu $a
+  bin/build-ubuntu $a
 
   figlet "build vagrant"
-  #bin/build-vagrant $a -f
+  bin/build-vagrant $a -f
 
-  figlet "start vagrant"
-  eval bin/vagrant $a up '"''$'"${a}_ip"'"'
-
-  figlet "postinstall"
-  bin/vagrant $a ssh bash postinstall.sh vagrant
+  bin/setup-vagrant "$a"
 done
 
 

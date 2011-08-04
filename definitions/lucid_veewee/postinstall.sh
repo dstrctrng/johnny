@@ -41,7 +41,5 @@ else # STAGE 2: during vagrant after rebooting into updated kernel
   umount /mnt
 
   rm $pth_vguest
-
-  poweroff
 fi
 

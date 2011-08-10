@@ -1,3 +1,17 @@
+GIT
+  remote: https://github.com/zendesk/veewee_x11.git
+  revision: e4d3c4c869ce9c3c9fd85104ef6ccd9a1c527b21
+  specs:
+    veewee (0.2.0)
+      cucumber (~> 1.0.2)
+      highline (~> 1.6.1)
+      net-ssh (~> 2.1.0)
+      popen4 (~> 0.1.2)
+      progressbar
+      rspec (~> 2.5.0)
+      thor (~> 0.14.6)
+      vagrant (~> 0.8.2)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -45,15 +59,6 @@ GEM
       net-ssh (~> 2.1.4)
       thor (~> 0.14.6)
       virtualbox (~> 0.9.1)
-    veewee (0.2.0)
-      cucumber (~> 1.0.2)
-      highline (~> 1.6.1)
-      net-ssh (~> 2.1.0)
-      popen4 (~> 0.1.2)
-      progressbar
-      rspec (~> 2.5.0)
-      thor (~> 0.14.6)
-      vagrant (~> 0.8.0)
     virtualbox (0.9.1)
       ffi (~> 1.0.9)
 
@@ -62,4 +67,4 @@ PLATFORMS
 
 DEPENDENCIES
   vagrant
-  veewee
+  veewee!

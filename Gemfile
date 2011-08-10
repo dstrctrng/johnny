@@ -1,4 +1,4 @@
 source :gemcutter
 
 gem "vagrant"
-gem "veewee"
+gem "veewee", :git => "https://github.com/zendesk/veewee_x11.git"

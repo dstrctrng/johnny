@@ -28,7 +28,7 @@ done | sort -u  > $tmp_veewee
 
 for veewee_name in $(cat $tmp_veewee); do
   bundle exec vagrant box remove "$veewee_name" 2>&1 || VBoxManage unregistervm $veewee_name --delete || true
-  bundle exec vagrant basebox build "$veewee_name" -f "$@"
+  bundle exec vagrant basebox build "$veewee_name" -f -n
 
   rm -f "$veewee_name.box"
   bundle exec vagrant basebox export "$veewee_name"

@@ -23,26 +23,6 @@ tmp_veewee=$(mktemp -t XXXXXX)
 
 for a in "$@"; do
   source "config/${a}"
-  echo $veewee_name
-done | sort -u  > $tmp_veewee
-
-for veewee_name in $(cat $tmp_veewee); do
-  bundle exec vagrant box remove "$veewee_name" 2>&1 || VBoxManage unregistervm $veewee_name --delete || true
-  bundle exec vagrant basebox build "$veewee_name" -f -n
-
-  rm -f "$veewee_name.box"
-  bundle exec vagrant basebox export "$veewee_name"
-done
-
-rm -f $tmp_veewee
-
-
-
-for a in "$@"; do
-  figlet "building $a"
-
-  source "config/${a}"
-  export veewee_name vagrant_name
 
 	nm_build=$(basename $(cat definitions/${veewee_name}/definition.rb  | grep iso_file | cut -d'"' -f2) .iso) # TODO weak
   url_build=$(cat definitions/${veewee_name}/definition.rb  | grep iso_src | cut -d'"' -f2) # TODO weak
@@ -60,6 +40,25 @@ for a in "$@"; do
     find iso/$nm_build.src/ -ls | sort | md5 > "iso/$nm_build.md5"
     hdiutil unmount "$(pwd)/iso/$nm_build.mnt"
   fi
+
+  echo $veewee_name >> $tmp_veewee
+done
+
+for veewee_name in $(cat $tmp_veewee | sort -u); do
+  bundle exec vagrant box remove "$veewee_name" 2>&1 || VBoxManage unregistervm $veewee_name --delete || true
+  bundle exec vagrant basebox build "$veewee_name" -f -n
+
+  rm -f "$veewee_name.box"
+  bundle exec vagrant basebox export "$veewee_name"
+done
+
+rm -f $tmp_veewee
+
+for a in "$@"; do
+  figlet "building $a"
+
+  source "config/${a}"
+  export veewee_name vagrant_name
 
   figlet "build install"
   bin/build-ubuntu $a

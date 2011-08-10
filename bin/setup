@@ -23,6 +23,7 @@ tmp_veewee=$(mktemp -t XXXXXX)
 
 for a in "$@"; do
   source "config/${a}"
+  export veewee_name vagrant_name
 
 	nm_build=$(basename $(cat definitions/${veewee_name}/definition.rb  | grep iso_file | cut -d'"' -f2) .iso) # TODO weak
   url_build=$(cat definitions/${veewee_name}/definition.rb  | grep iso_src | cut -d'"' -f2) # TODO weak
@@ -40,6 +41,9 @@ for a in "$@"; do
     find iso/$nm_build.src/ -ls | sort | md5 > "iso/$nm_build.md5"
     hdiutil unmount "$(pwd)/iso/$nm_build.mnt"
   fi
+
+  figlet "build install"
+  bin/build-ubuntu $a
 
   echo $veewee_name >> $tmp_veewee
 done
@@ -59,9 +63,6 @@ for a in "$@"; do
 
   source "config/${a}"
   export veewee_name vagrant_name
-
-  figlet "build install"
-  bin/build-ubuntu $a
 
   figlet "build vagrant"
   bin/build-vagrant $a -f

@@ -17,6 +17,27 @@ if [[ -z $vboxnet ]]; then
 	VBoxManage hostonlyif ipconfig "$vboxnet_if" --ip $vboxnet.100 --netmask 255.255.255.0
 fi
 
+
+
+tmp_veewee=$(mktemp -t XXXXXX)
+
+for a in "$@"; do
+  source "config/${a}"
+  echo $veewee_name
+done | sort -u  > $tmp_veewee
+
+for veewee_name in $(cat $tmp_veewee); do
+  bundle exec vagrant box remove "$veewee_name" 2>&1 || VBoxManage unregistervm $veewee_name --delete || true
+  bundle exec vagrant basebox build "$veewee_name" -f "$@"
+
+  rm -f "$veewee_name.box"
+  bundle exec vagrant basebox export "$veewee_name"
+done
+
+rm -f $tmp_veewee
+
+
+
 for a in "$@"; do
   figlet "building $a"
 

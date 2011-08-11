@@ -32,13 +32,11 @@ for a in "$@"; do
   wget -c "$url_build" -O "iso/$nm_build.download.iso" # 404 does not return error code
   [[ -s "iso/$nm_build.download.iso" ]] || exit 1
 
-  if [[ ! -f "iso/$nm_build.md5" || "$(cat iso/$nm_build.md5)" != "$(find iso/$nm_build.src/ -ls | sort | md5)" ]]; then
+  if [[ ! -d "iso/$nm_build.src" ]]; then
     figlet "unpack iso"
     hdiutil mount -mountpoint "$(pwd)/iso/$nm_build.mnt" "iso/$nm_build.download.iso"
-    sudo rm -rf "iso/$nm_build.src"
     sudo rsync -ia "iso/$nm_build.mnt/." "iso/$nm_build.src/"
     sudo chown -R $(id -un):$(id -gn) "iso/$nm_build.src"
-    find iso/$nm_build.src/ -ls | sort | md5 > "iso/$nm_build.md5"
     hdiutil unmount "$(pwd)/iso/$nm_build.mnt"
   fi
 

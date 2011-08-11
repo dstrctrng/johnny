@@ -13,7 +13,14 @@ for pth_config in config/*; do
   cat >> $tmp_aliases << EOF
   function $nm_vagrant {
     pushd $(pwd) > /dev/null
-    bin/vagrant $nm_vagrant ssh "\$@"
+    case "\$1" in
+      up)
+        bin/vagrant $nm_vagrant up \$(ifconfig "vboxnet0" 2>&- | grep 'inet ' | awk '{print \$2}' | cut -d. -f1-3).\$${nm_vagrant}_ip
+        ;;
+      *)
+        bin/vagrant $nm_vagrant ssh "\$@"
+        ;;
+    esac
     popd > /dev/null
   }
 EOF

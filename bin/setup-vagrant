@@ -20,7 +20,7 @@ for a in "$@"; do
 
 	nm_build=$(basename $(cat definitions/${veewee_name}/definition.rb  | grep iso_file | cut -d'"' -f2) .iso) # TODO weak
   url_build=$(cat definitions/${veewee_name}/definition.rb  | grep iso_src | cut -d'"' -f2) # TODO weak
-  ip_vagrant=$(eval echo '"''$'"${a}_ip"'"')
+  ip_vagrant="${vboxnet}.$(eval echo '"''$'"${a}_ip"'"')"
 
   figlet "start vagrant"
   bin/vagrant $a up $ip_vagrant

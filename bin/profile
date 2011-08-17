@@ -15,7 +15,7 @@ for pth_config in config/*; do
     pushd $(pwd) > /dev/null
     case "\$1" in
       ssh_config)
-        bin/vagrant $nm_vagrant ssh_config | sed "s#Host default#Host $nm_vagrant#"
+        bin/vagrant $nm_vagrant ssh_config | sed "s#Host default#Host $nm_vagrant \$(ifconfig "vboxnet0" 2>&- | grep 'inet ' | awk '{print \$2}' | cut -d. -f1-3).\$${nm_vagrant}_ip#"
         echo "  ForwardAgent yes"
         ;;
       up)

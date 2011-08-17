@@ -23,6 +23,7 @@ for a in "$@"; do
   ip_vagrant="${vboxnet}.$(eval echo '"''$'"${a}_ip"'"')"
 
   figlet "start vagrant"
+  bin/vagrant $a destroy || true
   bin/vagrant $a up $ip_vagrant
 
   figlet "postinstall"

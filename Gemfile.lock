@@ -1,5 +1,5 @@
 GIT
-  remote: https://github.com/zendesk/veewee_x11.git
+  remote: https://github.com/HeSYINUvSBZfxqA/veewee_x11.git
   revision: d8d841b0ad7e515cf689d5e8372b2aaa1f49169a
   ref: v0.2.0.1
   specs:
@@ -28,7 +28,7 @@ GEM
     diff-lcs (1.1.2)
     erubis (2.7.0)
     ffi (1.0.9)
-    gherkin (2.4.5)
+    gherkin (2.4.16)
       json (>= 1.4.6)
     highline (1.6.2)
     i18n (0.5.0)

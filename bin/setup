@@ -4,21 +4,6 @@ figlet "ubuntu bundle"
 bundle config build.nokogiri --with-xslt-dir=/opt/zendesk/macports/local
 bundle check || bundle --local --path vendor/bundle
 
-vboxnet_if="vboxnet0" # TODO allow user to specify their own vboxnet interface
-vboxnet_default="192.168.56" # TODO let virtualbox find a non-conflicting network?
-
-figlet "vbox network"
-export vboxnet="$(ifconfig "$vboxnet_if" 2>&- | grep 'inet ' | awk '{print $2}' | cut -d. -f1-3)"
-if [[ -z $vboxnet ]]; then
-  vboxif="$(ifconfig "$vboxnet_if" 2>&- | head -1 | cut -d: -f1)"
-  [[ -z $vboxif ]] && VBoxManage hostonlyif create
-
-	vboxnet=$vboxnet_default
-	VBoxManage hostonlyif ipconfig "$vboxnet_if" --ip $vboxnet.100 --netmask 255.255.255.0
-fi
-
-
-
 tmp_veewee=$(mktemp -t XXXXXX)
 
 for a in "$@"; do

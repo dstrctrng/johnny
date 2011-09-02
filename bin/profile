@@ -12,15 +12,16 @@ for pth_config in config/*; do
   nm_vagrant="${pth_config##*/}"
   cat >> $tmp_aliases << EOF
   function $nm_vagrant {
+    export VAGRANT_VM_NETWORK=\$PANCAKE_NETWORK.\$${nm_vagrant}_ip
+
     pushd $(pwd) > /dev/null
-    export VAGRANT_VM_NETWORK=\$(ifconfig "vboxnet0" 2>&- | grep 'inet ' | awk '{print \$2}' | cut -d. -f1-3).\$${nm_vagrant}_ip
     case "\$1" in
       ssh_config)
-        bin/vagrant $nm_vagrant ssh_config | sed "s#Host default#Host $nm_vagrant \$(ifconfig "vboxnet0" 2>&- | grep 'inet ' | awk '{print \$2}' | cut -d. -f1-3).\$${nm_vagrant}_ip#"
+        bin/vagrant $nm_vagrant ssh_config | sed "s#Host default#Host $nm_vagrant \$PANCAKE_NETWORK.\$${nm_vagrant}_ip#"
         echo "  ForwardAgent yes"
         ;;
       up)
-        bin/vagrant $nm_vagrant up \$(ifconfig "vboxnet0" 2>&- | grep 'inet ' | awk '{print \$2}' | cut -d. -f1-3).\$${nm_vagrant}_ip
+        bin/vagrant $nm_vagrant up \$PANCAKE_NETWORK.\$${nm_vagrant}_ip
         ;;
       destroy)
         bin/vagrant $nm_vagrant destroy

@@ -24,7 +24,6 @@ function run_vagrant {
       rm -f $tmp_config
       ;;
     up)
-      export VAGRANT_VM_NETWORK=$1; shift
       bundle exec vagrant $nm_cmd "$@"
       ;;
     *)

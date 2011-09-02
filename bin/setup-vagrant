@@ -1,35 +1,22 @@
 #!/bin/bash -e
 
-# TODO copy-pasta
-vboxnet_if="vboxnet0" # TODO allow user to specify their own vboxnet interface
-vboxnet_default="192.168.56" # TODO let virtualbox find a non-conflicting network?
-
-# TODO copy-pasta
-export vboxnet="$(ifconfig "$vboxnet_if" 2>&- | grep 'inet ' | awk '{print $2}' | cut -d. -f1-3)"
-if [[ -z $vboxnet ]]; then
-  vboxif="$(ifconfig "$vboxnet_if" 2>&- | head -1 | cut -d: -f1)"
-  [[ -z $vboxif ]] && VBoxManage hostonlyif create
-
-	vboxnet=$vboxnet_default
-	VBoxManage hostonlyif ipconfig "$vboxnet_if" --ip $vboxnet.100 --netmask 255.255.255.0
-fi
-
 for a in "$@"; do
   source "config/${a}"
   export veewee_name vagrant_name
 
 	nm_build=$(basename $(cat definitions/${veewee_name}/definition.rb  | grep iso_file | cut -d'"' -f2) .iso) # TODO weak
   url_build=$(cat definitions/${veewee_name}/definition.rb  | grep iso_src | cut -d'"' -f2) # TODO weak
-  ip_vagrant="${vboxnet}.$(eval echo '"''$'"${a}_ip"'"')"
+
+  export VAGRANT_VM_NETWORK="${PANCAKE_NETWORK}.$(eval echo '"''$'"${a}_ip"'"')"
 
   figlet "start vagrant"
   bin/vagrant $a destroy || true
-  bin/vagrant $a up $ip_vagrant
+  bin/vagrant $a up
 
   figlet "postinstall"
   bin/vagrant $a ssh bash postinstall.sh vagrant
 
   figlet "custom"
-  ../config/vagrant-custom $a $ip_vagrant
+  ../config/vagrant-custom $a $VAGRANT_VM_NETWORK
 done
 

@@ -7,7 +7,7 @@ for a in "$@"; do
 	nm_build=$(basename $(cat definitions/${veewee_name}/definition.rb  | grep iso_file | cut -d'"' -f2) .iso) # TODO weak
   url_build=$(cat definitions/${veewee_name}/definition.rb  | grep iso_src | cut -d'"' -f2) # TODO weak
 
-  export VAGRANT_VM_NETWORK="${PANCAKE_NETWORK}.$(eval echo '"''$'"${a}_ip"'"')"
+  export VAGRANT_VM_NETWORK="192.168.88.$(eval echo '"''$'"${a}_ip"'"')"
 
   figlet "start vagrant"
   bin/vagrant $a destroy || true
@@ -15,8 +15,5 @@ for a in "$@"; do
 
   figlet "postinstall"
   bin/vagrant $a ssh bash postinstall.sh vagrant
-
-  figlet "custom"
-  ../config/vagrant-custom $a $VAGRANT_VM_NETWORK
 done
 

@@ -1,48 +1,32 @@
 #!/bin/bash -e
 
-[[ -z $cmd_wrapper ]] && export cmd_wrapper=$0
-echo $cmd_wrapper | egrep -q '^/' || cmd_wrapper="$(pwd)/$cmd_wrapper"
+nm_vagrant=$1; shift
+nm_cmd=$1; shift
 
-function run_vagrant {
-  nm_cmd=$1; shift
-  case "$nm_cmd" in
-    ssh|scp)
-      tmp_config=$(mktemp -t XXXXXX)
-      $cmd_wrapper ssh_config > $tmp_config
+cd vagrant/$nm_vagrant
 
-      if [[ .vagrant -nt .ssh_known_hosts ]]; then
-        port=$(run_vagrant ssh_config | awk '$1 == "Port" { print $2 }')
-        hostname=$(run_vagrant ssh_config | awk '$1 == "HostName" { print $2 }')
-        ssh-keyscan -p $port $hostname,"[$hostname]:$port" 2>&- > .ssh_known_hosts
-      fi
+tmp_config=$(mktemp -t XXXXXXXXX)
+bundle exec vagrant ssh_config > $tmp_config
+echo "UserKnownHostsFile=.ssh_known_hosts" >> $tmp_config
 
-      case "$nm_cmd" in
-        ssh) ssh -F $tmp_config -o UserKnownHostsFile=.ssh_known_hosts default "$@" ;;
-        scp) scp -F $tmp_config -o UserKnownHostsFile=.ssh_known_hosts "$1" default:"$2" ;;
-      esac
+if [[ .vagrant -nt .ssh_known_hosts ]]; then
+  tmp_vagrant=$(mktemp -t XXXXXXXXX)
+  bundle exec vagrant ssh_config > $tmp_vagrant
 
-      rm -f $tmp_config
-      ;;
-    up)
-      bundle exec vagrant $nm_cmd "$@"
-      ;;
-    *)
-      bundle exec vagrant $nm_cmd "$@"
-      ;;
-  esac
-}
+  port=$(awk '$1 == "Port" { print $2 }' $tmp_vagrant)
+  hostname=$(awk '$1 == "HostName" { print $2 }' $tmp_vagrant)
 
-pth_vagrant="$(pwd)/vagrant"
+  rm -f $tmp_vagrant
 
-[[ -z $BUNDLE_GEMFILE ]] && export BUNDLE_GEMFILE="$(pwd)/Gemfile"
-
-if [[ -d $pth_vagrant/$1 ]]; then
-  nm_box=$1; shift
-  cd $pth_vagrant/$nm_box
-  if [[ -z $1 ]]; then
-    [[ -f .vagrant ]] || run_vagrant up
-    set "ssh"
-  fi
+  ssh-keyscan -p $port $hostname,"[$hostname]:$port" 2>&- > .ssh_known_hosts
 fi
 
-run_vagrant "$@"
+cd -
+
+case "$nm_cmd" in
+  ssh)   ssh -F $tmp_config                     default "$@" ;;
+  scp)   scp -F $tmp_config                "$1" default:"$2" ;;
+  rsync) rsync -ia -e "ssh -F $tmp_config" "$1" default:"$2" ;;
+esac
+
+rm -f $tmp_config

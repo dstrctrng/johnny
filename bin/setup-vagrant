@@ -7,14 +7,14 @@ source "config/$nm_base"
 bin/bundler
 
 rsync -ia definitions/$nm_base/vagrant/. vagrant/$nm_instance/
-cd vagrant/$nm_instance
-perl -pe 'm{config.vm.network} && s{config.vm.network.*}{config.vm.network "$ENV{ip_instance}"}' -i Vagrantfile
+perl -pe 'm{config.vm.network} && s{config.vm.network.*}{config.vm.network "$ENV{ip_instance}"}' -i vagrant/$nm_instance/Vagrantfile
 
 figlet "start vagrant"
+pushd vagrant/$nm_instance > /dev/null
 bundle exec vagrant destroy || true
 bundle exec vagrant up
+popd > /dev/null
 
-cd - > /dev/null
 figlet "postinstall"
 bin/vagrant $nm_instance rsync vagrant/$nm_instance/postinstall.sh postinstall.sh
 bin/vagrant $nm_instance ssh ./postinstall.sh vagrant

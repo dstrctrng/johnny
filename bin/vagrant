@@ -1,14 +1,11 @@
 #!/bin/bash -e
 
-nm_base=$1; shift
+nm_instance=$1; shift
 nm_cmd=$1; shift
 
-source config/$nm_base
 bin/bundler
 
-nm_vagrant="${nm_base}_vagrant"
-
-cd vagrant/$nm_vagrant
+cd vagrant/$nm_instance
 
 tmp_config=$(mktemp -t XXXXXXXXX)
 bundle exec vagrant ssh_config > $tmp_config

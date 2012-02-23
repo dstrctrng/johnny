@@ -1,13 +1,14 @@
 #!/bin/bash -e
 
 nm_base=$1; shift
+nm_instance=$1; shift
+export ip_instance=$1; shift
 source "config/$nm_base"
 bin/bundler
 
-nm_build=$(basename $(cat definitions/${veewee_name}/definition.rb  | grep iso_file | cut -d'"' -f2) .iso) # TODO weak
-url_build=$(cat definitions/${veewee_name}/definition.rb  | grep iso_src | cut -d'"' -f2) # TODO weak
-
-cd vagrant/$vagrant_name
+rsync -ia vagrant/$vagrant_name/. vagrant/$nm_instance/
+cd vagrant/$nm_instance
+perl -pe 'm{config.vm.network} && s{config.vm.network.*}{config.vm.network "$ENV{ip_instance}"}' -i Vagrantfile
 
 figlet "start vagrant"
 bundle exec vagrant destroy || true
@@ -15,5 +16,5 @@ bundle exec vagrant up
 
 cd - > /dev/null
 figlet "postinstall"
-bin/vagrant $nm_base rsync vagrant/$vagrant_name/postinstall.sh postinstall.sh
-bin/vagrant $nm_base ssh ./postinstall.sh vagrant
+bin/vagrant $nm_instance rsync vagrant/$nm_instance/postinstall.sh postinstall.sh
+bin/vagrant $nm_instance ssh ./postinstall.sh vagrant

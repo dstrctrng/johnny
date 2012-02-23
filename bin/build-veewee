@@ -8,6 +8,8 @@ figlet "build veewee"
 bundle exec vagrant box remove "$veewee_name" 2>&1 || VBoxManage unregistervm $veewee_name --delete || true
 bundle exec vagrant basebox build "$veewee_name" -f -n
 
+cd definitions/$veewee_name
+
 figlet "exporting veewee"
 rm -f "$veewee_name.box"
 bundle exec vagrant basebox export "$veewee_name"

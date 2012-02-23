@@ -16,6 +16,7 @@ bundle exec vagrant up
 popd > /dev/null
 
 figlet "postinstall"
+bin/vagrant   ssh $nm_instance tee -a .ssh/authorized_keys < ~/.ssh/authorized_keys
 bin/vagrant   ssh $nm_instance hostname $nm_instance
 bin/vagrant rsync $nm_instance vagrant/$nm_instance/postinstall.sh $nm_instance:postinstall.sh
 bin/vagrant   ssh $nm_instance ./postinstall.sh

@@ -1,13 +1,12 @@
 #!/bin/bash -e
 
 nm_base=$1; shift
-
 source "config/$nm_base"
-
-nm_build=$(basename $(cat definitions/${veewee_name}/definition.rb  | grep iso_file | cut -d'"' -f2) .iso) # TODO weak
-url_build=$(cat definitions/${veewee_name}/definition.rb  | grep iso_src | cut -d'"' -f2) # TODO weak
+bin/bundler
 
 figlet "download iso"
+nm_build=$(basename $(cat definitions/${veewee_name}/definition.rb  | grep iso_file | cut -d'"' -f2) .iso) # TODO weak
+url_build=$(cat definitions/${veewee_name}/definition.rb  | grep iso_src | cut -d'"' -f2) # TODO weak
 wget -c "$url_build" -O "iso/$nm_build.download.iso" # 404 does not return error code
 [[ -s "iso/$nm_build.download.iso" ]] || exit 1
 

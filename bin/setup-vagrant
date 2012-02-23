@@ -1,19 +1,17 @@
 #!/bin/bash -e
 
-for a in "$@"; do
-  source "config/${a}"
-  export veewee_name vagrant_name
+nm_base=$1; shift
+source "config/$nm_base"
+bin/bundler
 
-	nm_build=$(basename $(cat definitions/${veewee_name}/definition.rb  | grep iso_file | cut -d'"' -f2) .iso) # TODO weak
-  url_build=$(cat definitions/${veewee_name}/definition.rb  | grep iso_src | cut -d'"' -f2) # TODO weak
+nm_build=$(basename $(cat definitions/${veewee_name}/definition.rb  | grep iso_file | cut -d'"' -f2) .iso) # TODO weak
+url_build=$(cat definitions/${veewee_name}/definition.rb  | grep iso_src | cut -d'"' -f2) # TODO weak
 
-  cd vagrant/$vagrant_name
+cd vagrant/$vagrant_name
 
-  figlet "start vagrant"
-  bundle exec vagrant destroy || true
-  bundle exec vagrant up
+figlet "start vagrant"
+bundle exec vagrant destroy || true
+bundle exec vagrant up
 
-  figlet "postinstall"
-  bundle exec ssh bash postinstall.sh vagrant
-done
-
+figlet "postinstall"
+bundle exec ssh bash postinstall.sh vagrant

@@ -30,7 +30,10 @@ case "$nm_cmd" in
   scp)   scp -F $tmp_config                "$1" default:"$2" ;;
   rsync) rsync -ia -e "ssh -F $tmp_config" "$1" default:"$2" ;;
 
-  *)     bundle exec vagrant "$@" ;;
+  *)     
+    cd vagrant/$nm_instance
+    bundle exec vagrant "$nm_cmd" "$@" 
+  ;;
 esac
 
 rm -f $tmp_config

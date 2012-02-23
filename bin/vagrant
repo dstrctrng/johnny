@@ -1,7 +1,16 @@
 #!/bin/bash -e
 
-nm_instance=$1; shift
-nm_cmd=$1; shift
+case "$1" in
+  ssh|scp|rsync)
+    nm_cmd=$1; shift
+    nm_instance=$1; shift
+  ;;
+  *)
+    nm_instance=$1; shift
+    nm_cmd="vagrant"
+  ;;
+esac
+
 bin/bundler
 
 pushd vagrant/$nm_instance > /dev/null
@@ -9,26 +18,25 @@ pushd vagrant/$nm_instance > /dev/null
 pth_config="$(pwd)/.ssh_config"
 
 if [[ .vagrant -nt $pth_config ]]; then
-  bundle exec vagrant ssh_config > $pth_config
-  echo "UserKnownHostsFile=.ssh_known_hosts" >> $pth_config
+  bundle exec vagrant ssh_config | egrep -v '/dev/null' | perl -pe "s{Host default}{Host $nm_instance}" > $pth_config
+  echo "  UserKnownHostsFile=$(pwd)/.ssh_known_hosts" >> $pth_config
 fi
-
 
 if [[ .vagrant -nt .ssh_known_hosts ]]; then
   port=$(awk '$1 == "Port" { print $2 }' $pth_config)
   hostname=$(awk '$1 == "HostName" { print $2 }' $pth_config)
-  ssh-keyscan -p $port $hostname,"[$hostname]:$port" 2>&- > .ssh_known_hosts
+  ssh-keyscan -p $port $hostname,$nm_instance,"[$hostname]:$port" 2>&- > .ssh_known_hosts
 fi
 
 popd > /dev/null
 
 case "$nm_cmd" in
-  ssh)   ssh -F $pth_config                     default "$@" ;;
-  scp)   scp -F $pth_config                "$1" default:"$2" ;;
-  rsync) rsync -ia -e "ssh -F $pth_config" "$1" default:"$2" ;;
+  ssh)   ssh -F $pth_config   $nm_instance "$@" ;;
+  scp)   scp -F $pth_config                "$@" ;;
+  rsync) rsync -ia -e "ssh -F $pth_config" "$@" ;;
 
-  *)     
+  vagrant)     
     cd vagrant/$nm_instance
-    bundle exec vagrant "$nm_cmd" "$@" 
+    bundle exec vagrant "$@" 
   ;;
 esac

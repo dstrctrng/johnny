@@ -16,7 +16,7 @@ bundle exec vagrant up
 popd > /dev/null
 
 figlet "postinstall"
-bin/vagrant $nm_instance ssh hostname $nm_instance
-bin/vagrant $nm_instance rsync vagrant/$nm_instance/postinstall.sh postinstall.sh
-bin/vagrant $nm_instance ssh ./postinstall.sh
-bin/vagrant $nm_instance ssh reboot
+bin/vagrant   ssh $nm_instance hostname $nm_instance
+bin/vagrant rsync $nm_instance vagrant/$nm_instance/postinstall.sh $nm_instance:postinstall.sh
+bin/vagrant   ssh $nm_instance ./postinstall.sh
+bin/vagrant   ssh $nm_instance reboot

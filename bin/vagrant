@@ -1,7 +1,12 @@
 #!/bin/bash -e
 
-nm_vagrant=$1; shift
+nm_base=$1; shift
 nm_cmd=$1; shift
+
+source config/$nm_base
+bin/bundler
+
+nm_vagrant="${nm_base}_vagrant"
 
 cd vagrant/$nm_vagrant
 

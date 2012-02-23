@@ -37,22 +37,16 @@ fi
 # relocation large dirs to /data
 install -d -o root -g root -m 0755 /data/home
 
-[[ -L /home ]] || {
+if [[ ! -L /home ]]; then
   rsync -a /home/ /data/home/
   rm -r /home
   ln -s /data/home /
-}
-
-[[ -L /var/chef ]] || {
-  rm -rf /var/chef
-  ln -nsf /data/zendesk_chef /var/chef
-}
+fi
 
 # grant sudo permissions
 cat > /etc/sudoers <<EOF
 Defaults env_reset
 root ALL=(ALL) ALL
-zendesk ALL=(ALL) NOPASSWD:ALL
 EOF
 
 chmod 440 /etc/sudoers
@@ -91,7 +85,6 @@ export RUBY_HEAP_MIN_SLOTS=500000
 export RUBY_HEAP_SLOTS_INCREMENT=1
 
 want_187="2011.03"
-want_192="p180"
 
 set +e
 source /usr/local/lib/rvm
@@ -100,11 +93,6 @@ ncpus=$(grep -c "^processor" /proc/cpuinfo)
 export rvm_make_flags="-j ${ncpus}"
 
 rvm list strings | grep -q "ree-1.8.7-$want_187" || rvm install ree-1.8.7-$want_187
-rvm list strings | grep -q "ruby-1.9.2-$want_192" || rvm install ruby-1.9.2-$want_192
-
-# upgrade ruby 1.9.2 rubygems
-#rvm ruby-1.9.2-$want_192
-#rvm rubygems 1.6.2 # this is the default, here to document
 
 # upgrade ree rubygems
 rvm ree-1.8.7-$want_187

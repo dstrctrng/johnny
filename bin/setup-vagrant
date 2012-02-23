@@ -13,5 +13,7 @@ figlet "start vagrant"
 bundle exec vagrant destroy || true
 bundle exec vagrant up
 
+cd - > /dev/null
 figlet "postinstall"
-bundle exec ssh bash postinstall.sh vagrant
+bin/vagrant $nm_base rsync vagrant/$vagrant_name/postinstall.sh postinstall.sh
+bin/vagrant $nm_base ssh ./postinstall.sh vagrant

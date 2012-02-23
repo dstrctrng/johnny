@@ -5,7 +5,6 @@ source "config/$nm_base"
 bin/bundler
 
 bin/media $nm_base
-bin/build-ubuntu $nm_base
+bin/build-installer $nm_base
 bin/build-veewee $nm_base
-bin/build-vagrant $nm_base
 bin/setup-vagrant $nm_base

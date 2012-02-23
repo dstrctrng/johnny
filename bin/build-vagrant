@@ -1,9 +1,0 @@
-#!/bin/bash -e
-
-nm_box=$1; shift
-source "config/$nm_base"
-bin/bundler
-
-figlet "build vagrant"
-bundle exec vagrant box remove "$vagrant_name" 2>&1 || VBoxManage unregistervm $vagrant_name --delete || true
-bundle exec vagrant box add "$vagrant_name" "$veewee_name.box"

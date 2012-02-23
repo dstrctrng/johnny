@@ -26,12 +26,14 @@ if [[ .vagrant -nt .ssh_known_hosts ]]; then
   ssh-keyscan -p $port $hostname,"[$hostname]:$port" 2>&- > .ssh_known_hosts
 fi
 
-cd -
+cd - > /dev/null
 
 case "$nm_cmd" in
   ssh)   ssh -F $tmp_config                     default "$@" ;;
   scp)   scp -F $tmp_config                "$1" default:"$2" ;;
   rsync) rsync -ia -e "ssh -F $tmp_config" "$1" default:"$2" ;;
+
+  *)     bundle exec vagrant "$@" ;;
 esac
 
 rm -f $tmp_config

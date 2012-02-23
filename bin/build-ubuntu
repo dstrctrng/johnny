@@ -4,7 +4,6 @@ nm_base=$1; shift
 source "config/$nm_base"
 bin/bundler
 
-nm_box=$1; shift
 nm_build=$(basename $(cat definitions/$veewee_name/definition.rb  | grep iso_file | cut -d'"' -f2) .iso) # TODO weak
 
 mkdir -p iso/$nm_build.src/{preseed,isolinux}
@@ -15,8 +14,8 @@ rsync -ia definitions/$veewee_name/preseed.cfg iso/$nm_build.src/preseed/
 rsync -ia definitions/$veewee_name/isolinux.cfg iso/$nm_build.src/isolinux/
 
 figlet "build installer"
-cd iso/$nm_build.src
 pth_iso="$(pwd)/iso/$nm_build.iso"
+cd iso/$nm_build.src
 mkisofs \
   -r -V "$nm_build" \
   -cache-inodes -J -l -b isolinux/isolinux.bin -c isolinux/boot.cat \

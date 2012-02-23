@@ -1,36 +1,13 @@
 #!/bin/bash -e
 
-bundle config build.nokogiri --with-xslt-dir="$HOME/.macports/local"
-bundle check || bundle --local --path vendor/bundle
-
 nm_base=$1; shift
 
 source "config/$nm_base"
 
-nm_build=$(basename $(cat definitions/${veewee_name}/definition.rb  | grep iso_file | cut -d'"' -f2) .iso) # TODO weak
-url_build=$(cat definitions/${veewee_name}/definition.rb  | grep iso_src | cut -d'"' -f2) # TODO weak
+bin/bundler
 
-figlet "download iso"
-wget -c "$url_build" -O "iso/$nm_build.download.iso" # 404 does not return error code
-[[ -s "iso/$nm_build.download.iso" ]] || exit 1
-
-if [[ ! -d "iso/$nm_build.src" ]]; then
-  figlet "unpack iso"
-  hdiutil mount -mountpoint "$(pwd)/iso/$nm_build.mnt" "iso/$nm_build.download.iso"
-  sudo rsync -ia "iso/$nm_build.mnt/." "iso/$nm_build.src/"
-  sudo chown -R $(id -un):$(id -gn) "iso/$nm_build.src"
-  hdiutil unmount "$(pwd)/iso/$nm_build.mnt"
-fi
-
+bin/media $nm_base
 bin/build-ubuntu $nm_base
-
-figlet "build veewee"
-bundle exec vagrant box remove "$veewee_name" 2>&1 || VBoxManage unregistervm $veewee_name --delete || true
-bundle exec vagrant basebox build "$veewee_name" -f -n
-
-figlet "importing veewee"
-rm -f "$veewee_name.box"
-bundle exec vagrant basebox export "$veewee_name"
-
-bin/build-vagrant $nm_base -f
-bin/setup-vagrant "$nm_base"
+bin/build-veewee $nm_base
+bin/build-vagrant $nm_base
+bin/setup-vagrant $nm_base

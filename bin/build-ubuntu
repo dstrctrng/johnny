@@ -1,5 +1,7 @@
 #!/bin/bash -e
 
+figlet "build installer"
+
 nm_box=$1; shift
 nm_build=$(basename $(cat definitions/$veewee_name/definition.rb  | grep iso_file | cut -d'"' -f2) .iso) # TODO weak
 
@@ -10,11 +12,11 @@ chmod u+w iso/$nm_build.src/isolinux/isolinux.bin
 rsync -ia definitions/$veewee_name/preseed.cfg iso/$nm_build.src/preseed/
 rsync -ia definitions/$veewee_name/isolinux.cfg iso/$nm_build.src/isolinux/
 
+cd iso/$nm_build.src
+
 pth_iso="$(pwd)/iso/$nm_build.iso"
-pushd iso/$nm_build.src > /dev/null
 mkisofs \
   -r -V "$nm_build" \
   -cache-inodes -J -l -b isolinux/isolinux.bin -c isolinux/boot.cat \
   -no-emul-boot -boot-load-size 4 -boot-info-table -o "$pth_iso" .
-popd > /dev/null
 

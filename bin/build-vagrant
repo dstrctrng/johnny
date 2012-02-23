@@ -2,5 +2,6 @@
 
 nm_box=$1; shift
 
+figlet "build vagrant"
 bundle exec vagrant box remove "$vagrant_name" 2>&1 || VBoxManage unregistervm $vagrant_name --delete || true
 bundle exec vagrant box add "$vagrant_name" "$veewee_name.box"

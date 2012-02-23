@@ -1,2 +1,2 @@
-veewee_name="lucid_veewee"
-vagrant_name="lucid_vagrant"
+export veewee_name="lucid_veewee"
+export vagrant_name="lucid_vagrant"

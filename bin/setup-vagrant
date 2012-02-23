@@ -6,7 +6,7 @@ export ip_instance=$1; shift
 source "config/$nm_base"
 bin/bundler
 
-rsync -ia vagrant/$vagrant_name/. vagrant/$nm_instance/
+rsync -ia definitions/$nm_base/vagrant/. vagrant/$nm_instance/
 cd vagrant/$nm_instance
 perl -pe 'm{config.vm.network} && s{config.vm.network.*}{config.vm.network "$ENV{ip_instance}"}' -i Vagrantfile
 

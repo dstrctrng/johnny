@@ -5,15 +5,15 @@ source "config/$nm_base"
 bin/bundler
 
 figlet "build veewee"
-bundle exec vagrant box remove "$veewee_name" 2>&1 || VBoxManage unregistervm $veewee_name --delete || true
-bundle exec vagrant basebox build "$veewee_name" -f -n
+bundle exec vagrant box remove "$nm_base" 2>&1 || VBoxManage unregistervm $nm_base --delete || true
+bundle exec vagrant basebox build "$nm_base" -f -n
 
-cd definitions/$veewee_name
+cd definitions/$nm_base
 
 figlet "exporting veewee"
-rm -f "$veewee_name.box"
-bundle exec vagrant basebox export "$veewee_name"
+rm -f "$nm_base.box"
+bundle exec vagrant basebox export "$nm_base"
 
 figlet "build vagrant"
-bundle exec vagrant box remove "$vagrant_name" 2>&1 || VBoxManage unregistervm $vagrant_name --delete || true
-bundle exec vagrant box add "$vagrant_name" "$veewee_name.box"
+bundle exec vagrant box remove "$nm_base" 2>&1 || VBoxManage unregistervm $nm_base --delete || true
+bundle exec vagrant box add "$nm_base" "$nm_base.box"

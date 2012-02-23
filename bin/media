@@ -5,8 +5,8 @@ source "config/$nm_base"
 bin/bundler
 
 figlet "download iso"
-nm_build=$(basename $(cat definitions/${veewee_name}/definition.rb  | grep iso_file | cut -d'"' -f2) .iso) # TODO weak
-url_build=$(cat definitions/${veewee_name}/definition.rb  | grep iso_src | cut -d'"' -f2) # TODO weak
+nm_build=$(basename $(cat definitions/$nm_base/definition.rb  | grep iso_file | cut -d'"' -f2) .iso) # TODO weak
+url_build=$(cat definitions/$nm_base/definition.rb  | grep iso_src | cut -d'"' -f2) # TODO weak
 wget -c "$url_build" -O "iso/$nm_build.download.iso" || true # 404 does not return error code
 
 if [[ -d "iso/$nm_build.src" ]]; then

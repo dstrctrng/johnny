@@ -5,5 +5,5 @@ bin/bundler
 
 bin/media $nm_base
 bin/build-installer $nm_base
-bin/build-veewee $nm_base
-bin/setup-vagrant $nm_base
+bin/build-box $nm_base
+bin/setup-instance $nm_base

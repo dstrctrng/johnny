@@ -20,10 +20,4 @@ bundle exec vagrant up
 popd > /dev/null
 
 figlet "postinstall"
-bin/vagrant ssh $nm_instance tee -a .ssh/authorized_keys < ~/.ssh/authorized_keys
-echo $nm_instance | bin/vagrant ssh $nm_instance tee /etc/hostname
-echo "127.0.0.1	localhost $nm_instance" | bin/vagrant ssh $nm_instance tee /etc/hosts
-bin/vagrant ssh $nm_instance hostname $nm_instance
-bin/vagrant ssh $nm_instance reboot
-
 bin/vagrant ssh $nm_instance /vagrant/postinstall.sh $nm_instance

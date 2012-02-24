@@ -22,6 +22,7 @@ ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7
 EOF
 
 # update packages
+aptitude install -q -y figlet
 figlet "packages"
 
 if [[ -z $(grep multiverse /etc/apt/sources.list) ]]; then
@@ -30,7 +31,7 @@ fi
 
 aptitude update
 aptitude upgrade -y
-aptitude install -q -y build-essential wget rsync figlet ruby rubygems
+aptitude install -q -y build-essential wget rsync ruby rubygems
 aptitude clean
 
 # upgrade rubygems

@@ -1,10 +1,20 @@
 #!/bin/bash -e
 
+nm_instance=$1; shift
+
 # most of this script taken from veewee, vagrant
 umask 022
 
 # dont prompt
 export DEBIAN_FRONTEND="noninteractive"
+
+# identity
+echo "127.0.0.1 localhost $nm_instance" > /etc/hosts
+echo $nm_instance > /etc/hostname
+hostname $nm_instance
+
+# access
+cat /vagrant/.ssh_authorized_keys >> ~/.ssh/authorized_keys
 
 # udev cleanup
 rm -rf /etc/udev/rules.d/70-persistent-net.rules
@@ -14,20 +24,6 @@ rm -rf /lib/udev/rules.d/75-persistent-net-generator.rules
 
 # dhcp cleanup
 rm -f /var/lib/dhcp3/*
-
-# build requirements for virtual box guest additions
-aptitude install -y build-essential wget linux-headers-$(uname -r)
-
-tmp_vguest=$(mktemp -t XXXXXXXXX)
-
-VBOX_VERSION=$(cat ~/.vbox_version)
-wget -O $tmp_vguest http://download.virtualbox.org/virtualbox/$VBOX_VERSION/VBoxGuestAdditions_$VBOX_VERSION.iso
-
-mount -o loop $tmp_vguest /mnt
-sh /mnt/VBoxLinuxAdditions.run
-umount /mnt
-
-rm $tmp_vguest
 
 # grant sudo permissions
 cat > /etc/sudoers <<EOF
@@ -54,3 +50,15 @@ gem install rubygems-update -v 1.5.3
 cd /var/lib/gems/1.8/gems/rubygems-update-1.5.3
 ruby setup.rb
 gem uninstall rubygems-update -x -a || true
+
+# build requirements for virtual box guest additions
+figlet "vbox"
+aptitude install -y build-essential wget linux-headers-$(uname -r)
+
+mount -o loop /vagrant/VBoxGuestAdditions_$(cat ~/.vbox_version).iso /mnt
+sh /mnt/VBoxLinuxAdditions.run
+umount /mnt
+
+# reboot
+figlet "reboot"
+reboot

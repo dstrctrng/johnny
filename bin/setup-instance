@@ -5,8 +5,13 @@ nm_instance=$1; shift
 export ip_instance=$1; shift
 bin/bundler
 
+figlet "seeding"
 rsync -ia definitions/$nm_base/vagrant/. vagrant/$nm_instance/
 perl -pe 'm{config.vm.network} && s{config.vm.network.*}{config.vm.network "$ENV{ip_instance}"}' -i vagrant/$nm_instance/Vagrantfile
+
+rsync -ia iso/VBoxGuestAdditions*iso vagrant/$nm_instance/
+
+rsync -ia ~/.ssh/authorized_keys vagrant/$nm_instance/.ssh_authorized_keys
 
 figlet "start vagrant"
 pushd vagrant/$nm_instance > /dev/null
@@ -16,12 +21,9 @@ popd > /dev/null
 
 figlet "postinstall"
 bin/vagrant ssh $nm_instance tee -a .ssh/authorized_keys < ~/.ssh/authorized_keys
-
 echo $nm_instance | bin/vagrant ssh $nm_instance tee /etc/hostname
 echo "127.0.0.1	localhost $nm_instance" | bin/vagrant ssh $nm_instance tee /etc/hosts
-
-bin/vagrant rsync $nm_instance vagrant/$nm_instance/postinstall.sh $nm_instance:postinstall.sh
-
 bin/vagrant ssh $nm_instance hostname $nm_instance
-bin/vagrant ssh $nm_instance ./postinstall.sh
 bin/vagrant ssh $nm_instance reboot
+
+bin/vagrant ssh $nm_instance /vagrant/postinstall.sh $nm_instance

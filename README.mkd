@@ -1,0 +1,4 @@
+Ubuntu preseeeding
+==================
+
+See https://help.ubuntu.com/10.04/installation-guide/example-preseed.txt

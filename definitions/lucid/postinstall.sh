@@ -28,3 +28,5 @@ aptitude clean
 
 # dhcp delays
 echo "pre-up sleep 2" >> /etc/network/interfaces
+
+poweroff

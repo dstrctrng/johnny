@@ -22,11 +22,24 @@ ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7
 EOF
 
 # update packages
+figlet "packages"
+
+if [[ -z $(grep multiverse /etc/apt/sources.list) ]]; then
+  sed -i s/universe/"universe multiverse"/ /etc/apt/sources.list
+fi
+
 aptitude update
 aptitude upgrade -y
+aptitude install -q -y build-essential wget rsync figlet ruby rubygems
 aptitude clean
 
-# dhcp delays
-echo "pre-up sleep 2" >> /etc/network/interfaces
+# upgrade rubygems
+figlet "rubygems"
+gem install rubygems-update -v 1.5.3
+cd /var/lib/gems/1.8/gems/rubygems-update-1.5.3
+ruby setup.rb
+gem uninstall rubygems-update -x -a || true
 
+# poweroff
+figlet "poweroff"
 poweroff

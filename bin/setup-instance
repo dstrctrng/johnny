@@ -5,14 +5,6 @@ nm_instance=$1; shift
 export ip_instance=$1; shift
 bin/bundler
 
-figlet "seeding"
-rsync -ia definitions/$nm_base/vagrant/. vagrant/$nm_instance/
-perl -pe 'm{config.vm.network} && s{config.vm.network.*}{config.vm.network "$ENV{ip_instance}"}' -i vagrant/$nm_instance/Vagrantfile
-
-rsync -ia iso/VBoxGuestAdditions*iso vagrant/$nm_instance/
-
-rsync -ia ~/.ssh/authorized_keys vagrant/$nm_instance/.ssh_authorized_keys
-
 figlet "start vagrant"
 pushd vagrant/$nm_instance > /dev/null
 bundle exec vagrant destroy || true
@@ -20,7 +12,8 @@ bundle exec vagrant up
 popd > /dev/null
 
 figlet "vbox"
-aptitude install -y build-essential wget linux-headers-$(uname -r)
+cat | bin/vagrant ssh $nm_instance bash - << "EOF"
+aptitude install -y linux-headers-$(uname -r)
 
 tmp_vguest=$(mktemp -t XXXXXXXXX)
 
@@ -31,7 +24,13 @@ mount -o loop $tmp_vguest /mnt
 sh /mnt/VBoxLinuxAdditions.run
 umount /mnt
 
-rm $tmp_vguest
+rm -f $tmp_vguest
+EOF
+
+figlet "seeding"
+rsync -ia ~/.ssh/authorized_keys vagrant/$nm_instance/.ssh_authorized_keys
+rsync -ia definitions/$nm_base/vagrant/. vagrant/$nm_instance/
+perl -pe 'm{config.vm.network} && s{config.vm.network.*}{config.vm.network "$ENV{ip_instance}"}' -i vagrant/$nm_instance/Vagrantfile
 
 figlet "postinstall"
 bin/vagrant ssh $nm_instance /vagrant/postinstall.sh $nm_instance

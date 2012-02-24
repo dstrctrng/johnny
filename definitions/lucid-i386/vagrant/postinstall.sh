@@ -33,24 +33,6 @@ EOF
 
 chmod 440 /etc/sudoers
 
-# update OS packages
-if [[ -z $(grep multiverse /etc/apt/sources.list) ]]; then
-  sed -i s/universe/"universe multiverse"/ /etc/apt/sources.list
-fi
-
-# install the basics
-aptitude install -q -y rsync figlet 
-
-# install build packages
-figlet "ruby"
-aptitude install -q -y ruby rubygems
-
-# upgrade rubygems
-gem install rubygems-update -v 1.5.3
-cd /var/lib/gems/1.8/gems/rubygems-update-1.5.3
-ruby setup.rb
-gem uninstall rubygems-update -x -a || true
-
 # reboot
 figlet "reboot"
 reboot

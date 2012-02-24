@@ -3,16 +3,15 @@
 nm_base=$1; shift
 bin/bundler
 
-figlet "build veewee"
-bundle exec vagrant box remove "$nm_base" 2>&1 || VBoxManage unregistervm $nm_base --delete || true
+figlet "build box"
 bundle exec vagrant basebox build "$nm_base" -f -n
 
-cd definitions/$nm_base
-
-figlet "exporting veewee"
+figlet "exporting box"
+pushd definitions/$nm_base > /dev/null
 rm -f "$nm_base.box"
 bundle exec vagrant basebox export "$nm_base"
+popd > /dev/null
 
-figlet "build vagrant"
+figlet "importing box"
 bundle exec vagrant box remove "$nm_base" 2>&1 || VBoxManage unregistervm $nm_base --delete || true
-bundle exec vagrant box add "$nm_base" "$nm_base.box"
+bundle exec vagrant box add "$nm_base" "definitions/$nm_base/$nm_base.box"

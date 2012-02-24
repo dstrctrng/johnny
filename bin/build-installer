@@ -1,7 +1,6 @@
 #!/bin/bash -e
 
 nm_base=$1; shift
-source "config/$nm_base"
 bin/bundler
 
 nm_build=$(basename $(cat definitions/$nm_base/definition.rb  | grep iso_file | cut -d'"' -f2) .iso) # TODO weak

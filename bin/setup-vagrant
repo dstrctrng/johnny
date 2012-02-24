@@ -3,7 +3,6 @@
 nm_base=$1; shift
 nm_instance=$1; shift
 export ip_instance=$1; shift
-source "config/$nm_base"
 bin/bundler
 
 rsync -ia definitions/$nm_base/vagrant/. vagrant/$nm_instance/

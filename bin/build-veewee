@@ -1,7 +1,6 @@
 #!/bin/bash -e
 
 nm_base=$1; shift
-source "config/$nm_base"
 bin/bundler
 
 figlet "build veewee"

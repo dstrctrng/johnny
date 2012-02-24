@@ -51,14 +51,6 @@ cd /var/lib/gems/1.8/gems/rubygems-update-1.5.3
 ruby setup.rb
 gem uninstall rubygems-update -x -a || true
 
-# build requirements for virtual box guest additions
-figlet "vbox"
-aptitude install -y build-essential wget linux-headers-$(uname -r)
-
-mount -o loop /vagrant/VBoxGuestAdditions_$(cat ~/.vbox_version).iso /mnt
-sh /mnt/VBoxLinuxAdditions.run
-umount /mnt
-
 # reboot
 figlet "reboot"
 reboot

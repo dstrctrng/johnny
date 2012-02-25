@@ -35,3 +35,4 @@ perl -pe 'm{config.vm.network} && s{config.vm.network.*}{config.vm.network "$ENV
 
 figlet "postinstall"
 bin/vagrant ssh $nm_instance /vagrant/postinstall.sh $nm_instance
+bin/vagrant $nm_instance reload

@@ -6,6 +6,9 @@ export ip_instance=$1; shift
 bin/bundler
 
 figlet "start vagrant"
+rsync -ia definitions/$nm_base/vagrant/. vagrant/$nm_instance/
+perl -pe 'm{config.vm.network} && s{config.vm.network.*}{config.vm.network "$ENV{ip_instance}"}' -i vagrant/$nm_instance/Vagrantfile
+
 pushd vagrant/$nm_instance > /dev/null
 bundle exec vagrant destroy || true
 bundle exec vagrant up
@@ -28,11 +31,7 @@ rm -f $tmp_vguest
 EOF
 bin/vagrant $nm_instance reload
 
-figlet "seeding"
-rsync -ia ~/.ssh/authorized_keys vagrant/$nm_instance/.ssh_authorized_keys
-rsync -ia definitions/$nm_base/vagrant/. vagrant/$nm_instance/
-perl -pe 'm{config.vm.network} && s{config.vm.network.*}{config.vm.network "$ENV{ip_instance}"}' -i vagrant/$nm_instance/Vagrantfile
-
 figlet "postinstall"
+rsync -ia ~/.ssh/authorized_keys vagrant/$nm_instance/.ssh_authorized_keys
 bin/vagrant ssh $nm_instance /vagrant/postinstall.sh $nm_instance
 bin/vagrant $nm_instance reload

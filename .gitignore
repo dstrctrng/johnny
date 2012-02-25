@@ -3,3 +3,4 @@
 /iso
 /*.box
 /vagrant/*/.vagrant
+/vault

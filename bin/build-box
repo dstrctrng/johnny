@@ -8,7 +8,8 @@ bundle exec vagrant basebox build $nm_base -f -n
 
 figlet "exporting box"
 bundle exec vagrant basebox export $nm_base
-mv -fv $nm_base.box definitions/$nm_base/
+cp $nm_base.box definitions/$nm_base/
+rm -f $nm_base.box
 
 figlet "importing box"
 bundle exec vagrant box remove $nm_base 2>&1 || VBoxManage unregistervm $nm_base --delete || true

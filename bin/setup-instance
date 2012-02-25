@@ -9,10 +9,8 @@ figlet "start vagrant"
 rsync -ia definitions/$nm_base/vagrant/. vagrant/$nm_instance/
 perl -pe 'm{config.vm.network} && s{config.vm.network.*}{config.vm.network "$ENV{ip_instance}"}' -i vagrant/$nm_instance/Vagrantfile
 
-pushd vagrant/$nm_instance > /dev/null
-bundle exec vagrant destroy || true
-bundle exec vagrant up
-popd > /dev/null
+#bin/vagrant $nm_instance destroy || true
+bin/vagrant $nm_instance up
 
 figlet "vbox"
 cat | bin/vagrant ssh $nm_instance bash - << "EOF"

@@ -15,6 +15,7 @@ bin/vagrant $nm_instance up
 figlet "vbox"
 cat | bin/vagrant ssh $nm_instance bash - << "EOF"
 aptitude install -y linux-headers-$(uname -r)
+aptitude install -y htop
 
 tmp_vguest=$(mktemp -t XXXXXXXXX)
 

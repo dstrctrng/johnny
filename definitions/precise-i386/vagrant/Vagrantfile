@@ -1,0 +1,5 @@
+Vagrant::Config.run do |config|
+  config.vm.box = "precise-i386"
+  config.ssh.username = "root"
+  config.vm.network "192.178.88.99"
+end

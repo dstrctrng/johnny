@@ -13,9 +13,21 @@ if [[ -d "iso/$nm_build.src" ]]; then
 fi
 
 figlet "unpack iso"
-hdiutil mount -mountpoint "$(pwd)/iso/$nm_build.mnt" "iso/$nm_build.download.iso"
-sudo rsync -ia "iso/$nm_build.mnt/." "iso/$nm_build.src/"
-sudo chown -R $(id -un):$(id -gn) "iso/$nm_build.src"
-hdiutil unmount "$(pwd)/iso/$nm_build.mnt"
+if [[ -d iso/$nm_build.download.mount ]]; then
+  ln -nfs $nm_build.download.mount iso/$nm_build.mnt
+else
+  hdiutil mount -mountpoint "$(pwd)/iso/$nm_build.mnt" iso/$nm_build.download.iso
+fi
+
+sudo rsync -ia iso/$nm_build.mnt/. iso/$nm_build.src/
+sudo chown -R $(id -un):$(id -gn) iso/$nm_build.src
+
+if [[ -d iso/$nm_build.download.mount ]]; then
+  ln -nfs $nm_build.download.mount iso/$nm_build.mnt
+  rm -f iso/$nm_build.mnt
+else
+  hdiutil unmount "$(pwd)/iso/$nm_build.mnt"
+  rmdir iso/$nm_build.mnt
+fi
 
 exit 0

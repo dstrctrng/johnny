@@ -11,6 +11,7 @@ perl -pe 'm{config.vm.network} && s{config.vm.network.*}{config.vm.network "$ENV
 
 #bin/vagrant $nm_instance destroy || true
 bin/vagrant $nm_instance up
+rsync -ia ~/.ssh/authorized_keys vagrant/$nm_instance/.ssh_authorized_keys
 
 figlet "vbox"
 cat | bin/vagrant ssh $nm_instance bash - << "EOF"
@@ -28,9 +29,7 @@ umount /mnt
 
 rm -f $tmp_vguest
 EOF
-bin/vagrant $nm_instance reload
+bin/vagrant $nm_instance reload || { sleep 30; bin/vagrant $nm_instance reload; }
 
 figlet "postinstall"
-rsync -ia ~/.ssh/authorized_keys vagrant/$nm_instance/.ssh_authorized_keys
 bin/vagrant ssh $nm_instance /vagrant/postinstall.sh $nm_instance
-bin/vagrant ssh $nm_instance reboot

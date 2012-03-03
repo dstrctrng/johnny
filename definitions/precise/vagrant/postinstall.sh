@@ -32,3 +32,5 @@ root ALL=(ALL) ALL
 EOF
 
 chmod 440 /etc/sudoers
+
+reboot

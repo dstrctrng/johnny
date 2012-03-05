@@ -1,0 +1,8 @@
+#!/bin/bash -e
+
+nm_base=$1; shift
+bin/bundler
+
+figlet "importing box"
+bundle exec vagrant box remove $nm_base 2>&1 || VBoxManage unregistervm $nm_base --delete || true
+bundle exec vagrant box add $nm_base definitions/$nm_base/$nm_base.box

@@ -1,0 +1,23 @@
+#!/bin/bash -e
+
+nm_instance=$1; shift
+bin/bundler
+
+figlet "vbox"
+cat | bin/vagrant ssh $nm_instance bash - << "EOF"
+aptitude install -y linux-headers-$(uname -r)
+aptitude install -y htop
+
+tmp_vguest=$(mktemp -t XXXXXXXXX)
+
+VBOX_VERSION=$(cat ~/.vbox_version)
+wget -O $tmp_vguest http://download.virtualbox.org/virtualbox/$VBOX_VERSION/VBoxGuestAdditions_$VBOX_VERSION.iso
+
+mount -o loop $tmp_vguest /mnt
+sh /mnt/VBoxLinuxAdditions.run
+umount /mnt
+
+rm -f $tmp_vguest
+EOF
+
+bin/vagrant $nm_instance reload || { sleep 30; bin/vagrant $nm_instance reload; }

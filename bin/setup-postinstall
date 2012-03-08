@@ -1,5 +1,7 @@
 #!/bin/bash -e
 
+nm_instance=$1; shift
+
 figlet "postinstall"
 rsync -ia ~/.ssh/authorized_keys vagrant/$nm_instance/.ssh_authorized_keys
 bin/vagrant ssh $nm_instance /vagrant/postinstall.sh $nm_instance

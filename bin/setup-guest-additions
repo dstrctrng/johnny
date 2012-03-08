@@ -4,19 +4,18 @@ nm_instance=$1; shift
 bin/bundler
 
 figlet "vbox"
-cat | bin/vagrant ssh $nm_instance bash - << "EOF"
-aptitude install -y linux-headers-$(uname -r)
+ver_virtualbox=$(bin/vagrant ssh $nm_instance cat .vbox_version)
+pth_guestadditions="iso/VBoxGuestAdditions_$ver_virtualbox.iso"
+url_guestadditions="http://download.virtualbox.org/virtualbox/$ver_virtualbox/VBoxGuestAdditions_$ver_virtualbox.iso"
 
-tmp_vguest=$(mktemp -t XXXXXXXXX)
+if [[ ! -f $pth_guestadditions ]]; then
+  wget -O $pth_guestadditions $url_guestadditions
+fi
 
-VBOX_VERSION=$(cat ~/.vbox_version)
-wget -O $tmp_vguest http://download.virtualbox.org/virtualbox/$VBOX_VERSION/VBoxGuestAdditions_$VBOX_VERSION.iso
-
-mount -o loop $tmp_vguest /mnt
-sh /mnt/VBoxLinuxAdditions.run
-umount /mnt
-
-rm -f $tmp_vguest
-EOF
+bin/vagrant scp $nm_instance $pth_guestadditions $nm_instance:
+bin/vagrant ssh $nm_instance mount -o loop /root/$(basename $pth_guestadditions) /mnt # get rid of root home dir hardcode
+bin/vagrant ssh $nm_instance sh /mnt/VBoxLinuxAdditions.run
+bin/vagrant ssh $nm_instance umount /mnt
 
 bin/vagrant $nm_instance reload || { sleep 30; bin/vagrant $nm_instance reload; }
+

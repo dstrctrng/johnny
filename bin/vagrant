@@ -18,7 +18,7 @@ pushd vagrant/$nm_instance > /dev/null
 pth_config="$(pwd)/.ssh_config"
 
 if [[ .vagrant -nt $pth_config ]]; then
-  bundle exec vagrant ssh_config | egrep -v '/dev/null' | perl -pe "s{Host default}{Host $nm_instance}" > $pth_config
+  bundle exec vagrant ssh-config | egrep -v '/dev/null' | perl -pe "s{Host default}{Host $nm_instance}" > $pth_config
   echo "  UserKnownHostsFile=$(pwd)/.ssh_known_hosts" >> $pth_config
 fi
 

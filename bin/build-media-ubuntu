@@ -27,7 +27,6 @@ if [[ -d iso/$nm_build.download.mount ]]; then
   rm -f iso/$nm_build.mnt
 else
   hdiutil unmount "$(pwd)/iso/$nm_build.mnt"
-  rmdir iso/$nm_build.mnt
 fi
 
 exit 0

@@ -1,5 +1,9 @@
 #!/bin/bash -e
 
+if [[ -n $1 && -z $2 ]]; then
+  set "$@" ssh
+fi
+
 case "$1" in
   ssh|scp|rsync)
     nm_cmd=$1; shift
@@ -11,6 +15,7 @@ case "$1" in
   ;;
 esac
 
+source .profile
 bin/bundler
 
 pushd vagrant/$nm_instance > /dev/null

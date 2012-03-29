@@ -5,9 +5,14 @@ nm_instance=$1; shift
 export ip_instance=$1; shift
 bin/bundler
 
-figlet "start vagrant"
 rsync -ia definitions/$nm_base/vagrant/. vagrant/$nm_instance/
 perl -pe 'm{config.vm.network} && s{xxx.xxx.xxx.xxx}{$ENV{ip_instance}}' -i vagrant/$nm_instance/Vagrantfile
+
+if ! bundle exec vagrant list | egrep -s "^$nm_base[ ]"'$'; then
+  bin/setup-box $nm_box
+fi
+
+figlet "starting vagrant"
 bin/vagrant $nm_instance up || true # errors out on the /vagrant mount
 
 bin/setup-guest-additions $nm_instance

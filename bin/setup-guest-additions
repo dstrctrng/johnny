@@ -4,7 +4,7 @@ nm_instance=$1; shift
 bin/bundler
 
 figlet "vbox"
-ver_virtualbox=$(bin/vagrant ssh $nm_instance cat .vbox_version)
+ver_virtualbox=$(VBoxManage --version | perl -pe 's{[^\.\d].*$}{}')
 pth_guestadditions="iso/VBoxGuestAdditions_$ver_virtualbox.iso"
 url_guestadditions="http://download.virtualbox.org/virtualbox/$ver_virtualbox/VBoxGuestAdditions_$ver_virtualbox.iso"
 

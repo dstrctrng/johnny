@@ -1,32 +1,62 @@
-#!/bin/bash -e
+#!/bin/bash
 
-nm_base=$1; shift
-bin/bundler
+#/ NAME
+#/     build-media-ubuntu -- download and unpack ubuntu iso
+#/
+#/ SYNOPSIS
+#/     build-media-ubuntu [definition]
 
-figlet "download iso"
-nm_build=$(basename $(cat definitions/$nm_base/definition.rb  | grep iso_file | cut -d'"' -f2) .iso) # TODO weak
-url_build=$(cat definitions/$nm_base/definition.rb  | grep iso_src | cut -d'"' -f2) # TODO weak
-wget -c "$url_build" -O "iso/$nm_build.download.iso" || true # 404 does not return error code
+# figure out the project root under which bin, lib live
+shome="$(cd -P -- "$(dirname -- "$0")/.." && pwd -P)"
 
-if [[ -d "iso/$nm_build.src" ]]; then
-  exit 0
+# load a meat library
+source "$shome/bin/_prime" "$@"
+source $shome/.profile
+
+# entry point
+function main {
+  nm_base=$1; shift
+
+  $shome/bin/bundler
+
+  figlet "download iso"
+  nm_build=$(basename $(cat definitions/$nm_base/definition.rb  | grep iso_file | cut -d'"' -f2) .iso) # TODO weak
+  url_build=$(cat definitions/$nm_base/definition.rb  | grep iso_src | cut -d'"' -f2) # TODO weak
+  wget -c "$url_build" -O "iso/$nm_build.download.iso" || true # 404 does not return error code
+
+  if [[ -d "iso/$nm_build.src" ]]; then
+    exit 0
+  fi
+
+  figlet "unpack iso"
+  if [[ -d iso/$nm_build.download.mount ]]; then
+    ln -nfs $nm_build.download.mount iso/$nm_build.mnt
+  else
+    hdiutil mount -mountpoint "$(pwd)/iso/$nm_build.mnt" iso/$nm_build.download.iso
+  fi
+
+  sudo rsync -ia iso/$nm_build.mnt/. iso/$nm_build.src/
+  sudo chown -R $(id -un):$(id -gn) iso/$nm_build.src
+
+  if [[ -d iso/$nm_build.download.mount ]]; then
+    ln -nfs $nm_build.download.mount iso/$nm_build.mnt
+    rm -f iso/$nm_build.mnt
+  else
+    hdiutil unmount "$(pwd)/iso/$nm_build.mnt"
+  fi
+}
+
+# define command line options:
+#   var name, default, description, short option
+
+# parse the command-line
+parse_command_line "$@" || exit $?
+eval set -- "${FLAGS_ARGV}"
+
+if [[ "$#" < 1 ]]; then
+  logger.fatal "missing veewee definition"
+  exit 1
 fi
 
-figlet "unpack iso"
-if [[ -d iso/$nm_build.download.mount ]]; then
-  ln -nfs $nm_build.download.mount iso/$nm_build.mnt
-else
-  hdiutil mount -mountpoint "$(pwd)/iso/$nm_build.mnt" iso/$nm_build.download.iso
-fi
-
-sudo rsync -ia iso/$nm_build.mnt/. iso/$nm_build.src/
-sudo chown -R $(id -un):$(id -gn) iso/$nm_build.src
-
-if [[ -d iso/$nm_build.download.mount ]]; then
-  ln -nfs $nm_build.download.mount iso/$nm_build.mnt
-  rm -f iso/$nm_build.mnt
-else
-  hdiutil unmount "$(pwd)/iso/$nm_build.mnt"
-fi
-
-exit 0
+# pass arguments to entry point
+main "$@"

@@ -1,22 +1,54 @@
-#!/bin/bash -e
+#!/bin/bash
 
-nm_base=$1; shift
-bin/bundler
+#/ NAME
+#/     build-installer-ubuntu -- generate automated iso from unpackaged ubuntu media
+#/
+#/ SYNOPSIS
+#/     build-installer-ubuntu [definition]
 
-nm_build=$(basename $(cat definitions/$nm_base/definition.rb  | grep iso_file | cut -d'"' -f2) .iso) # TODO weak
+# figure out the project root under which bin, lib live
+shome="$(cd -P -- "$(dirname -- "$0")/.." && pwd -P)"
 
-mkdir -p iso/$nm_build.src/{preseed,isolinux}
-chmod u+w iso/$nm_build.src/{preseed,isolinux}
-chmod u+w iso/$nm_build.src/isolinux/isolinux.bin
+# load a meat library
+source "$shome/bin/_prime" "$@"
+source $shome/.profile
 
-rsync -ia definitions/$nm_base/preseed.cfg  iso/$nm_build.src/preseed/
-rsync -ia definitions/$nm_base/isolinux.cfg iso/$nm_build.src/isolinux/
+# entry point
+function main {
+  nm_base=$1; shift
 
-figlet "build installer"
-pth_iso="$(pwd)/iso/$nm_build.iso"
-cd iso/$nm_build.src
-mkisofs \
-  -r -V "$nm_build" \
-  -cache-inodes -J -l -b isolinux/isolinux.bin -c isolinux/boot.cat \
-  -no-emul-boot -boot-load-size 4 -boot-info-table -o "$pth_iso" .
+  $shome/bin/bundler
 
+  nm_build=$(basename $(cat $shome/definitions/$nm_base/definition.rb  | grep iso_file | cut -d'"' -f2) .iso) # TODO weak
+
+  mkdir -p $shome/iso/$nm_build.src/{preseed,isolinux}
+  chmod u+w $shome/iso/$nm_build.src/{preseed,isolinux}
+  chmod u+w $shome/iso/$nm_build.src/isolinux/isolinux.bin
+
+  rsync -ia $shome/definitions/$nm_base/preseed.cfg $shome/iso/$nm_build.src/preseed/
+  rsync -ia $shome/definitions/$nm_base/isolinux.cfg $shome/iso/$nm_build.src/isolinux/
+
+  figlet "build installer"
+  cd $shome/iso/$nm_build.src
+  mkisofs \
+    -r -V "$nm_build" \
+    -cache-inodes -J -l -b $shome/isolinux/isolinux.bin -c $shome/isolinux/boot.cat \
+    -no-emul-boot -boot-load-size 4 -boot-info-table -o "$shome/iso/$nm_build.iso" .
+
+  cd $shome
+}
+
+# define command line options:
+#   var name, default, description, short option
+
+# parse the command-line
+parse_command_line "$@" || exit $?
+eval set -- "${FLAGS_ARGV}"
+
+if [[ "$#" < 1 ]]; then
+  logger.fatal "missing veewee definition"
+  exit 1
+fi
+
+# pass arguments to entry point
+main "$@"

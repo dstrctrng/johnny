@@ -13,13 +13,14 @@ ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7
 EOF
 
 # update packages
+aptitude install -q -y figlet
 figlet "packages"
 if [[ -z $(grep multiverse /etc/apt/sources.list) ]]; then
   sed -i s/universe/"universe multiverse"/ /etc/apt/sources.list
 fi
 
 aptitude update
-aptitude install -q -y figlet wget rsync
+aptitude install -q -y wget rsync
 aptitude upgrade -y
 aptitude search -F '%c %p'  linux-image-[0123456789] | grep ^i | awk '{print $2}' | cut -d- -f3- | sed 's#^#linux-headers-#' | xargs aptitude install -q -y
 aptitude clean

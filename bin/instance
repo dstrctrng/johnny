@@ -21,7 +21,11 @@ function main {
 
   $shome/bin/bundler
 
-  rsync -ia $shome/definitions/$nm_base/vagrant/. $shome/vagrant/$nm_instance/
+  if [[ -d $shome/definitions/$nm_base/vagrant ]]; then
+    rsync -ia $shome/definitions/$nm_base/vagrant/. $shome/vagrant/$nm_instance/
+  else
+    rsync -ia $shome/definitions/$nm_instance/vagrant/. $shome/vagrant/$nm_instance/
+  fi
   perl -pe 'm{config.vm.network} && s{xxx.xxx.xxx.xxx}{$ENV{ip_instance}}' -i $shome/vagrant/$nm_instance/Vagrantfile
 
   figlet "starting vagrant"

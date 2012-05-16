@@ -33,7 +33,7 @@ function main {
   mkisofs \
     -r -V "$nm_build" \
     -cache-inodes -J -l -b isolinux/isolinux.bin -c isolinux/boot.cat \
-    -no-emul-boot -boot-load-size 4 -boot-info-table -o "$shome/mnt/$nm_build.iso" .
+    -no-emul-boot -boot-load-size 4 -boot-info-table -o "$shome/iso/$nm_build-unattended.iso" .
 
   cd $shome
 }

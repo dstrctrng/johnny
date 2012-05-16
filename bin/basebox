@@ -1,10 +1,10 @@
 #!/bin/bash
 
 #/ NAME
-#/     setup-box -- import a basebox into vagrant
+#/     build-box -- build and export a vagrant basebox
 #/
 #/ SYNOPSIS
-#/     setup-box [definition]
+#/     build-box [definition]
 
 # figure out the project root under which bin, lib live
 shome="$(cd -P -- "$(dirname -- "$0")/.." && pwd -P)"
@@ -18,6 +18,13 @@ function main {
   nm_base=$1; shift
 
   $shome/bin/bundler
+
+  figlet "build basebox"
+  bundle exec vagrant basebox build $nm_base -f -n
+
+  figlet "exporting basebox"
+  bundle exec vagrant basebox export $nm_base
+  mv $nm_base.box $shome/boxes/
 
   figlet "importing box"
   bundle exec vagrant box remove $nm_base 2>&1 || VBoxManage unregistervm $nm_base --delete || true

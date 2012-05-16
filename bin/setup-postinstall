@@ -1,8 +1,41 @@
-#!/bin/bash -e
+#!/bin/bash
 
-nm_instance=$1; shift
+#/ NAME
+#/     setup-postinstall -- sets up ssh keys, runs postinsall script
+#/
+#/ SYNOPSIS
+#/     setup-postinstall [vagrant]
 
-figlet "postinstall"
-rsync -ia ~/.ssh/authorized_keys vagrant/$nm_instance/.ssh_authorized_keys
-bin/vagrant ssh $nm_instance /vagrant/postinstall.sh $nm_instance
-bin/vagrant $nm_instance reload
+# figure out the project root under which bin, lib live
+shome="$(cd -P -- "$(dirname -- "$0")/.." && pwd -P)"
+
+# load a meat library
+source "$shome/bin/_prime" "$@"
+source $shome/.profile
+
+# entry point
+function main {
+  nm_instance=$1; shift
+
+  $shome/bin/bundler
+
+  figlet "postinstall"
+  rsync -ia ~/.ssh/authorized_keys $shome/vagrant/$nm_instance/.ssh_authorized_keys || true
+  $shome/bin/vagrant ssh $nm_instance /vagrant/postinstall.sh $nm_instance
+  $shome/bin/vagrant $nm_instance reload
+}
+
+# define command line options:
+#   var name, default, description, short option
+
+# parse the command-line
+parse_command_line "$@" || exit $?
+eval set -- "${FLAGS_ARGV}"
+
+if [[ "$#" < 1 ]]; then
+  logger.fatal "missing vagrant"
+  exit 1
+fi
+
+# pass arguments to entry point
+main "$@"

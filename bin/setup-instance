@@ -1,15 +1,56 @@
-#!/bin/bash -e
+#!/bin/bash
 
-nm_base=$1; shift
-nm_instance=$1; shift
-export ip_instance=$1; shift
-bin/bundler
+#/ NAME
+#/     setup-instance -- creates a vagrant from a veewee basebox
+#/
+#/ SYNOPSIS
+#/     setup-instance [veewee] [vagrant] [ipaddress]
 
-rsync -ia definitions/$nm_base/vagrant/. vagrant/$nm_instance/
-perl -pe 'm{config.vm.network} && s{xxx.xxx.xxx.xxx}{$ENV{ip_instance}}' -i vagrant/$nm_instance/Vagrantfile
+# figure out the project root under which bin, lib live
+shome="$(cd -P -- "$(dirname -- "$0")/.." && pwd -P)"
 
-figlet "starting vagrant"
-bin/vagrant $nm_instance up || true # errors out on the /vagrant mount
+# load a meat library
+source "$shome/bin/_prime" "$@"
+source $shome/.profile
 
-bin/setup-guest-additions $nm_instance
-bin/setup-postinstall $nm_instance
+# entry point
+function main {
+  nm_base=$1; shift
+  nm_instance=$1; shift
+  export ip_instance=$1; shift
+
+  $shome/bin/bundler
+
+  rsync -ia $shome/definitions/$nm_base/vagrant/. $shome/vagrant/$nm_instance/
+  perl -pe 'm{config.vm.network} && s{xxx.xxx.xxx.xxx}{$ENV{ip_instance}}' -i $shome/vagrant/$nm_instance/Vagrantfile
+
+  figlet "starting vagrant"
+  $shome/bin/vagrant $nm_instance up || true # errors out on the /vagrant mount
+  $shome/bin/setup-guest-additions $nm_instance
+  $shome/bin/setup-postinstall $nm_instance
+}
+
+# define command line options:
+#   var name, default, description, short option
+
+# parse the command-line
+parse_command_line "$@" || exit $?
+eval set -- "${FLAGS_ARGV}"
+
+if [[ "$#" < 1 ]]; then
+  logger.fatal "missing veewee definition"
+  exit 1
+fi
+
+if [[ "$#" < 2 ]]; then
+  logger.fatal "missing vagrant"
+  exit 1
+fi
+
+if [[ "$#" < 3 ]]; then
+  logger.fatal "missing ip addresses"
+  exit 1
+fi
+
+# pass arguments to entry point
+main "$@"

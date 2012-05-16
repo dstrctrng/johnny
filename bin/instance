@@ -29,7 +29,6 @@ function main {
     rsync -ia $shome/definitions/$nm_instance/. $shome/vagrant/$nm_instance/
   fi
   perl -pe 'm{config.vm.network} && s{xxx.xxx.xxx.xxx}{$ENV{ip_instance}}' -i $shome/vagrant/$nm_instance/Vagrantfile
-  exit 1
 
   figlet "starting vagrant"
   $shome/bin/vagrant $nm_instance up || true # errors out on the /vagrant mount

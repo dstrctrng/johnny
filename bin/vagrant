@@ -38,7 +38,7 @@ function main {
     ;;
   esac
 
-  bin/bundler
+  $shome/bin/bundler
 
   pushd $shome/vagrant/$nm_instance > /dev/null
 

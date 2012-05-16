@@ -24,8 +24,7 @@ function main {
 
   figlet "exporting box"
   bundle exec vagrant basebox export $nm_base
-  cp $nm_base.box $shome/definitions/$nm_base/
-  rm -f $nm_base.box
+  mv $nm_base.box $shome/boxes/
 
   $shome/bin/setup-box $nm_base
 }

@@ -28,6 +28,7 @@ function main {
   $shome/bin/vagrant $nm_instance up || true # errors out on the /vagrant mount
   $shome/bin/setup-guest-additions $nm_instance
   $shome/bin/setup-postinstall $nm_instance
+  $shome/bin/vagrant $nm_instance halt
 }
 
 # define command line options:

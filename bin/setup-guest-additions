@@ -28,12 +28,11 @@ function main {
     wget -O $pth_guestadditions $url_guestadditions
   fi
 
-  $shome/bin/vagrant scp $nm_instance $pth_guestadditions $nm_instance:
-  $shome/bin/vagrant ssh $nm_instance mount -o loop /root/$(basename $pth_guestadditions) /mnt # get rid of root home dir hardcode
-  $shome/bin/vagrant ssh $nm_instance sh /mnt/VBoxLinuxAdditions.run
-  $shome/bin/vagrant ssh $nm_instance umount /mnt
-
-  $shome/bin/vagrant $nm_instance reload || { sleep 30; $shome/bin/vagrant $nm_instance reload; }
+  $shome/bin/vagrant -- rsync $nm_instance $pth_guestadditions $nm_instance:
+  $shome/bin/vagrant -- ssh $nm_instance mount -o loop /root/$(basename $pth_guestadditions) /mnt # get rid of root home dir hardcode
+  $shome/bin/vagrant -- ssh $nm_instance sh /mnt/VBoxLinuxAdditions.run
+  $shome/bin/vagrant -- ssh $nm_instance umount /mnt
+  $shome/bin/vagrant -- $nm_instance reload || { sleep 30; $shome/bin/vagrant -- $nm_instance reload; }
 }
 
 # define command line options:

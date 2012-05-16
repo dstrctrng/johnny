@@ -1,21 +1,52 @@
-#!/bin/bash -e
+#!/bin/bash
 
-nm_instance=$1; shift
-bin/bundler
+#/ NAME
+#/     setup-guest-additions -- download and install virtualbox guest additions
+#/
+#/ SYNOPSIS
+#/     setup-guest-additions [vagrant]
 
-figlet "vbox"
-ver_virtualbox=$(VBoxManage --version | perl -pe 's{[^\.\d].*$}{}')
-pth_guestadditions="iso/VBoxGuestAdditions_$ver_virtualbox.iso"
-url_guestadditions="http://download.virtualbox.org/virtualbox/$ver_virtualbox/VBoxGuestAdditions_$ver_virtualbox.iso"
+# figure out the project root under which bin, lib live
+shome="$(cd -P -- "$(dirname -- "$0")/.." && pwd -P)"
 
-if [[ ! -f $pth_guestadditions ]]; then
-  wget -O $pth_guestadditions $url_guestadditions
+# load a meat library
+source "$shome/bin/_prime" "$@"
+source $shome/.profile
+
+# entry point
+function main {
+  nm_instance="$1"; shift
+
+  $shome/bin/bundler
+
+  figlet "vbox"
+  ver_virtualbox=$(VBoxManage --version | perl -pe 's{[^\.\d].*$}{}')
+  url_guestadditions="http://download.virtualbox.org/virtualbox/$ver_virtualbox/VBoxGuestAdditions_$ver_virtualbox.iso"
+  pth_guestadditions="$shome/iso/VBoxGuestAdditions_$ver_virtualbox.iso"
+
+  if [[ ! -f $pth_guestadditions ]]; then
+    wget -O $pth_guestadditions $url_guestadditions
+  fi
+
+  $shome/bin/vagrant scp $nm_instance $pth_guestadditions $nm_instance:
+  $shome/bin/vagrant ssh $nm_instance mount -o loop /root/$(basename $pth_guestadditions) /mnt # get rid of root home dir hardcode
+  $shome/bin/vagrant ssh $nm_instance sh /mnt/VBoxLinuxAdditions.run
+  $shome/bin/vagrant ssh $nm_instance umount /mnt
+
+  $shome/bin/vagrant $nm_instance reload || { sleep 30; $shome/bin/vagrant $nm_instance reload; }
+}
+
+# define command line options:
+#   var name, default, description, short option
+
+# parse the command-line
+parse_command_line "$@" || exit $?
+eval set -- "${FLAGS_ARGV}"
+
+if [[ "$#" < 1 ]]; then
+  logger.fatal "missing veewee definition"
+  exit 1
 fi
 
-bin/vagrant scp $nm_instance $pth_guestadditions $nm_instance:
-bin/vagrant ssh $nm_instance mount -o loop /root/$(basename $pth_guestadditions) /mnt # get rid of root home dir hardcode
-bin/vagrant ssh $nm_instance sh /mnt/VBoxLinuxAdditions.run
-bin/vagrant ssh $nm_instance umount /mnt
-
-bin/vagrant $nm_instance reload || { sleep 30; bin/vagrant $nm_instance reload; }
-
+# pass arguments to entry point
+main "$@"

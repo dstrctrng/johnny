@@ -1,10 +1,10 @@
 #!/bin/bash
 
 #/ NAME
-#/     build-media-ubuntu -- download and unpack ubuntu iso
+#/     build-box -- build and export a vagrant basebox
 #/
 #/ SYNOPSIS
-#/     build-media-ubuntu [definition]
+#/     build-box [definition]
 
 # figure out the project root under which bin, lib live
 shome="$(cd -P -- "$(dirname -- "$0")/.." && pwd -P)"

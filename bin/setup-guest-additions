@@ -5,7 +5,7 @@ bin/bundler
 
 figlet "vbox"
 ver_virtualbox=$(VBoxManage --version | perl -pe 's{[^\.\d].*$}{}')
-pth_guestadditions="iso/VBoxGuestAdditions_$ver_virtualbox.iso"
+pth_guestadditions="download/VBoxGuestAdditions_$ver_virtualbox.iso"
 url_guestadditions="http://download.virtualbox.org/virtualbox/$ver_virtualbox/VBoxGuestAdditions_$ver_virtualbox.iso"
 
 if [[ ! -f $pth_guestadditions ]]; then

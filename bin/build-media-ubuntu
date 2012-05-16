@@ -20,21 +20,21 @@ function main {
   $shome/bin/bundler
 
   nm_build=$(basename $(cat $shome/definitions/$nm_base/definition.rb  | grep iso_file | cut -d'"' -f2) .iso) # TODO weak
-  if [[ -d "$shome/iso/$nm_build.src" ]]; then
+  if [[ -d "$shome/mnt/$nm_build.src" ]]; then
     exit 0
   fi
 
   figlet "download iso"
   url_build=$(cat $shome/definitions/$nm_base/definition.rb  | grep iso_src | cut -d'"' -f2) # TODO weak
-  wget -c "$url_build" -O "$shome/download/$nm_build.iso" || true # 404 does not return error code
+  wget -c "$url_build" -O "$shome/iso/$nm_build.iso" || true # 404 does not return error code
 
   figlet "unpack iso"
-  hdiutil mount -mountpoint "$(pwd)/iso/$nm_build.mnt" $shome/download/$nm_build.iso
+  hdiutil mount -mountpoint "$(pwd)/mnt/$nm_build.mnt" $shome/iso/$nm_build.iso
 
-  sudo rsync -ia $shome/iso/$nm_build.mnt/. $shome/iso/$nm_build.src/
-  sudo chown -R $(id -un):$(id -gn) $shome/iso/$nm_build.src
+  sudo rsync -ia $shome/mnt/$nm_build.mnt/. $shome/mnt/$nm_build.src/
+  sudo chown -R $(id -un):$(id -gn) $shome/mnt/$nm_build.src
 
-  hdiutil unmount "$shome/iso/$nm_build.mnt"
+  hdiutil unmount "$shome/mnt/$nm_build.mnt"
 }
 
 # define command line options:

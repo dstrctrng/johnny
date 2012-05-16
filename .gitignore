@@ -1,6 +1,5 @@
 /.bundle
 /vendor/bundle
-/iso
 /*.box
 /vagrant/*/.vagrant
 /vault

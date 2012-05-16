@@ -21,19 +21,19 @@ function main {
 
   nm_build=$(basename $(cat $shome/definitions/$nm_base/definition.rb  | grep iso_file | cut -d'"' -f2) .iso) # TODO weak
 
-  mkdir -p $shome/iso/$nm_build.src/{preseed,isolinux}
-  chmod u+w $shome/iso/$nm_build.src/{preseed,isolinux}
-  chmod u+w $shome/iso/$nm_build.src/isolinux/isolinux.bin
+  mkdir -p $shome/mnt/$nm_build.src/{preseed,isolinux}
+  chmod u+w $shome/mnt/$nm_build.src/{preseed,isolinux}
+  chmod u+w $shome/mnt/$nm_build.src/isolinux/isolinux.bin
 
-  rsync -ia $shome/definitions/$nm_base/preseed.cfg $shome/iso/$nm_build.src/preseed/
-  rsync -ia $shome/definitions/$nm_base/isolinux.cfg $shome/iso/$nm_build.src/isolinux/
+  rsync -ia $shome/definitions/$nm_base/preseed.cfg $shome/mnt/$nm_build.src/preseed/
+  rsync -ia $shome/definitions/$nm_base/isolinux.cfg $shome/mnt/$nm_build.src/isolinux/
 
   figlet "build installer"
-  cd $shome/iso/$nm_build.src
+  cd $shome/mnt/$nm_build.src
   mkisofs \
     -r -V "$nm_build" \
     -cache-inodes -J -l -b isolinux/isolinux.bin -c isolinux/boot.cat \
-    -no-emul-boot -boot-load-size 4 -boot-info-table -o "$shome/iso/$nm_build.iso" .
+    -no-emul-boot -boot-load-size 4 -boot-info-table -o "$shome/mnt/$nm_build.iso" .
 
   cd $shome
 }

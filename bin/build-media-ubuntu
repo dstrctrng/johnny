@@ -29,21 +29,12 @@ function main {
   wget -c "$url_build" -O "$shome/download/$nm_build.iso" || true # 404 does not return error code
 
   figlet "unpack iso"
-  if [[ -d $shome/iso/$nm_build.mount ]]; then
-    ln -nfs $nm_build.mount $shome/iso/$nm_build.mnt
-  else
-    hdiutil mount -mountpoint "$(pwd)/iso/$nm_build.mnt" $shome/download/$nm_build.iso
-  fi
+  hdiutil mount -mountpoint "$(pwd)/iso/$nm_build.mnt" $shome/download/$nm_build.iso
 
   sudo rsync -ia $shome/iso/$nm_build.mnt/. $shome/iso/$nm_build.src/
   sudo chown -R $(id -un):$(id -gn) $shome/iso/$nm_build.src
 
-  if [[ -d $shome/iso/$nm_build.mount ]]; then
-    ln -nfs $nm_build.mount $shome/iso/$nm_build.mnt
-    rm -f $shome/iso/$nm_build.mnt
-  else
-    hdiutil unmount "$shome/iso/$nm_build.mnt"
-  fi
+  hdiutil unmount "$shome/iso/$nm_build.mnt"
 }
 
 # define command line options:

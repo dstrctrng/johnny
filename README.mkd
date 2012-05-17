@@ -1,7 +1,7 @@
 Basebox to Vagrant instances
 ============================
     bin/basebox precise
-    bin/box dev-precise precise 192.168.88.100
+    bin/instance dev-precise precise 192.168.88.100
     bin/package dev-precise
-    bin/box dev1 dev-precise 192.168.88.101
-    bin/box dev2 dev-precise 192.168.88.102
+    bin/instance dev1 dev-precise 192.168.88.101
+    bin/instance dev2 dev-precise 192.168.88.102

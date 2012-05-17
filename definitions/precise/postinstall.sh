@@ -32,6 +32,7 @@ gem install rubygems-update -v 1.8.17
 cd /var/lib/gems/1.8/gems/rubygems-update-1.8.17
 ruby setup.rb
 gem uninstall rubygems-update -x -a || true
+gem install bundler -v 1.1.3
 
 figlet "cleaning"
 # package cleanup

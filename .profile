@@ -1,4 +1,4 @@
 function v {
   rvm system
-  ~/.virtualbox/bin/vagrant "$@"
+  ~/.virtualbox/bin/vagrant -- "$@"
 }

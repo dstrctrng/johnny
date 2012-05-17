@@ -25,13 +25,9 @@ aptitude upgrade -y
 aptitude search -F '%c %p'  linux-image-[0123456789] | grep ^i | awk '{print $2}' | cut -d- -f3- | sed 's#^#linux-headers-#' | xargs aptitude install -q -y
 aptitude clean
 
-# upgrade rubygems
-figlet "rubygems"
+# install bundlwr
+figlet "ruby, bundler"
 aptitude install -q -y ruby rubygems 
-gem install rubygems-update -v 1.8.17
-cd /var/lib/gems/1.8/gems/rubygems-update-1.8.17
-ruby setup.rb
-gem uninstall rubygems-update -x -a || true
 gem install bundler -v 1.1.3
 
 figlet "cleaning"

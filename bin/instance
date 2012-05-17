@@ -35,7 +35,7 @@ function main {
   perl -pe 'm{config.vm.network} && s{xxx.xxx.xxx.xxx}{$ENV{ip_instance}}' -i $shome/vagrant/$nm_instance/Vagrantfile
 
   # configure ssh keys
-  cat ~/.ssh/authorized_keys "$(bundle show vagrant)/keys/vagrant.pub" > $shome/vagrant/$nm_instance/.ssh_authorized_keys
+  cat ~/.ssh/authorized_keys > $shome/vagrant/$nm_instance/.ssh_authorized_keys
 
   figlet "start vagrant"
   $shome/bin/vagrant $nm_instance up || true # errors out on the /vagrant mount

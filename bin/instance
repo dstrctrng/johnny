@@ -21,6 +21,8 @@ function main {
 
   $shome/bin/bundler
 
+  figlet "config vagrant"
+  # copy vagrant templates
   if [[ -d $shome/definitions/$nm_base/vagrant ]]; then
     rsync -ia $shome/definitions/$nm_base/vagrant/. $shome/vagrant/$nm_instance/
   elif [[ -f $shome/definitions/$nm_base/Vagrantfile ]]; then
@@ -28,11 +30,35 @@ function main {
   else
     rsync -ia $shome/definitions/$nm_instance/. $shome/vagrant/$nm_instance/
   fi
+
+  # configure network
   perl -pe 'm{config.vm.network} && s{xxx.xxx.xxx.xxx}{$ENV{ip_instance}}' -i $shome/vagrant/$nm_instance/Vagrantfile
 
-  figlet "starting vagrant"
+  # configure ssh keys
+  cat ~/.ssh/authorized_keys "$(bundle show vagrant)/keys/vagrant.pub" > $shome/vagrant/$nm_instance/.ssh_authorized_keys
+
+  figlet "start vagrant"
   $shome/bin/vagrant $nm_instance up || true # errors out on the /vagrant mount
-  $shome/bin/postinstall $nm_instance
+
+  figlet "vbox ext"
+  ver_virtualbox=$(VBoxManage --version | perl -pe 's{[^\.\d].*$}{}')
+  url_guestadditions="http://download.virtualbox.org/virtualbox/$ver_virtualbox/VBoxGuestAdditions_$ver_virtualbox.iso"
+  pth_guestadditions="$shome/iso/VBoxGuestAdditions_$ver_virtualbox.iso"
+
+  if [[ ! -f $pth_guestadditions ]]; then
+    wget -O $pth_guestadditions $url_guestadditions
+  fi
+
+  $shome/bin/vagrant -- rsync $nm_instance $pth_guestadditions $nm_instance:
+  $shome/bin/vagrant -- ssh $nm_instance mount -o loop /root/$(basename $pth_guestadditions) /mnt # get rid of root home dir hardcode
+  $shome/bin/vagrant -- ssh $nm_instance sh /mnt/VBoxLinuxAdditions.run
+  $shome/bin/vagrant -- ssh $nm_instance umount /mnt
+  $shome/bin/vagrant -- $nm_instance reload || { sleep 30; $shome/bin/vagrant -- $nm_instance reload; }
+
+  figlet "postinstall"
+  $shome/bin/vagrant -- ssh $nm_instance /vagrant/vagrant.sh $nm_instance
+
+  figlet "halt"
   $shome/bin/vagrant $nm_instance halt
 }
 

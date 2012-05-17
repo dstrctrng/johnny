@@ -1,7 +1,8 @@
 #!/bin/bash -e
 
-figlet "hack"
-echo "nameserver 8.8.8.8" > /etc/resolv.conf
+if [[ ! -d "/vagrant" ]]; then
+  exit 0
+fi
 
 figlet "sync"
 tmp_provision="$(mktemp -d -t XXXXXXXXX)"
@@ -9,18 +10,14 @@ rsync -ia /vagrant/provision/. "$tmp_provision"
 
 figlet "bundling"
 cd "$tmp_provision"
+if [[ ! -x "$(which bundle 2>&-)" ]]; then
+  gem install bundler
+fi
 bundle --local --path vendor/bundle
 
 figlet "cook"
 ln -nfs $tmp_provision/{nodes,roles,cookbooks,.microwave} ~/
 bundle exec chef-solo -c $tmp_provision/.microwave/config/solo.rb -N localhost
 
-figlet "info"
-pwd
-id -a
-uname -a
-env
-
 figlet "clean"
-cd
 rm -rf "$tmp_provision"

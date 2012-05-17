@@ -56,7 +56,7 @@ function main {
   $shome/bin/vagrant -- $nm_instance reload || { sleep 30; $shome/bin/vagrant -- $nm_instance reload; }
 
   figlet "postinstall"
-  $shome/bin/vagrant -- ssh $nm_instance /vagrant/vagrant.sh $nm_instance
+  $shome/bin/vagrant -- ssh $nm_instance /vagrant/vagrant.sh
 
   figlet "halt"
   $shome/bin/vagrant $nm_instance halt

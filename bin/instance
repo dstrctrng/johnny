@@ -57,9 +57,6 @@ function main {
 
   figlet "postinstall"
   $shome/bin/vagrant -- ssh $nm_instance /vagrant/vagrant.sh
-
-  figlet "halt"
-  $shome/bin/vagrant $nm_instance halt
 }
 
 # define command line options:

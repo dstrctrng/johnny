@@ -8,3 +8,6 @@ rm -rf /lib/udev/rules.d/75-persistent-net-generator.rules
 
 # dhcp cleanup
 rm -f /var/lib/dhcp3/*
+
+# shutdown
+poweroff

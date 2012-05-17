@@ -1,4 +1,7 @@
-Ubuntu preseeeding
-==================
-
-See https://help.ubuntu.com/10.04/installation-guide/example-preseed.txt
+Basebox to Vagrant instances
+============================
+    bin/basebox precise
+    bin/box dev-precise precise 192.168.88.100
+    bin/package dev-precise
+    bin/box dev1 dev-precise 192.168.88.101
+    bin/box dev2 dev-precise 192.168.88.102

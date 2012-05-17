@@ -12,8 +12,8 @@ cd "$tmp_provision"
 bundle --local --path vendor/bundle
 
 figlet "cook"
-ln -nfs "$tmp_provision"/{nodes,roles,cookbooks,config,.microwave} ~/
-bundle exec chef-solo -c config/solo.rb -N localhost
+ln -nfs $tmp_provision/{nodes,roles,cookbooks,.microwave} ~/
+bundle exec chef-solo -c $tmp_provision/.microwave/config/solo.rb -N localhost
 
 figlet "info"
 pwd

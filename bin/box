@@ -1,0 +1,4 @@
+#!/bin/bash
+
+bin/instance "$@"
+bin/package "$1"

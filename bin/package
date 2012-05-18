@@ -38,7 +38,7 @@ parse_command_line "$@" || exit $?
 eval set -- "${FLAGS_ARGV}"
 
 if [[ "$#" < 1 ]]; then
-  logger.fatal "missing vagrant"
+  logger_fatal "missing vagrant"
   exit 1
 fi
 

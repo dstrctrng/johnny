@@ -22,13 +22,15 @@ function main {
 
   figlet "config vagrant"
   # copy vagrant templates
+  local vagrant_source
   if [[ -d $shome/definitions/$nm_base/vagrant ]]; then
-    rsync -ia $shome/definitions/$nm_base/vagrant/. $shome/vagrant/$nm_instance/
+    vagant_source="$shome/definitions/$nm_base/vagrant/."
   elif [[ -f $shome/definitions/$nm_base/Vagrantfile ]]; then
-    rsync -ia $shome/definitions/$nm_base/. $shome/vagrant/$nm_instance/
+    vagrant_source="$shome/definitions/$nm_base/."
   else
-    rsync -ia $shome/definitions/$nm_instance/. $shome/vagrant/$nm_instance/
+    vagrant_source="$shome/definitions/$nm_instance/."
   fi
+  rsync --delete -ia "$vagrant_source"  "$shome/vagrant/$nm_instance/"
 
   # configure network
   if [[ -n "$FLAGS_ip" ]]; then

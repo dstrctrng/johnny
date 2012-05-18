@@ -11,6 +11,7 @@ wget -O "$pth_guestadditions" "$url_guestadditions"
 mount -o loop "$pth_guestadditions" /mnt
 sh /mnt/VBoxLinuxAdditions.run
 umount /mnt
+rm -f "$pth_guestadditions"
 
 # udev cleanup
 rm -rf /etc/udev/rules.d/70-persistent-net.rules

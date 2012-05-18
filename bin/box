@@ -22,6 +22,7 @@ function main {
 
   $shome/bin/instance "$nm_instance" "$nm_base"
   $shome/bin/package "$nm_instance"
+  bin/vagrant "$nm_instance" destroy --force
 }
 
 # define command line options:

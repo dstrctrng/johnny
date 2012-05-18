@@ -29,6 +29,8 @@ function main {
   figlet "importing box"
   bundle exec vagrant box remove $nm_base 2>&1 || VBoxManage unregistervm $nm_base --delete || true
   bundle exec vagrant box add $nm_base $shome/boxes/$nm_base.box
+
+  VBoxManage unregistervm "$nm_base" --delete
 }
 
 # define command line options:

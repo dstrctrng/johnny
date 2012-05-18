@@ -1,5 +1,0 @@
-Vagrant::Config.run do |config|
-  config.ssh.username = "root"
-  config.vm.box = "dev-precise"
-  config.vm.provision :shell, :path => "provision.sh", :args => "one two"
-end

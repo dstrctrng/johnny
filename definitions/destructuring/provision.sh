@@ -8,7 +8,7 @@ figlet "bundling"
 if [[ ! -x "$(which bundle 2>&-)" ]]; then
   gem install 'bundler-1.1.3.gem'
 fi
-bundle --local --path vendor/bundle
+bundle check || bundle --local --path vendor/bundle
 
 figlet "cook"
 bundle exec chef-solo -c "config/solo.rb" -N localhost

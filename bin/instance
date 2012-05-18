@@ -24,7 +24,7 @@ function main {
   # copy vagrant templates
   local vagrant_source
   if [[ -d $shome/definitions/$nm_base/vagrant ]]; then
-    vagant_source="$shome/definitions/$nm_base/vagrant/."
+    vagrant_source="$shome/definitions/$nm_base/vagrant/."
   elif [[ -f $shome/definitions/$nm_base/Vagrantfile ]]; then
     vagrant_source="$shome/definitions/$nm_base/."
   else

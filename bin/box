@@ -1,4 +1,46 @@
 #!/bin/bash
 
-bin/instance "$@"
-bin/package "$1"
+#/ NAME
+#/     box -- builds and boxes a vagrant
+#/
+#/ SYNOPSIS
+#/     box [vagrant] [veewee]
+
+# figure out the project root under which bin, lib live
+shome="$(cd -P -- "$(dirname -- "$0")/.." && pwd -P)"
+
+# load a meat library
+source "$shome/bin/_prime" "$@"
+source $shome/.profile
+
+# entry point
+function main {
+  nm_instance=$1; shift
+  nm_base=$1; shift
+
+  $shome/bin/bundler
+
+  $shome/bin/instance "$nm_instance" "$nm_base"
+  $shome/bin/package "$nm_instance"
+}
+
+# define command line options:
+#   var name, default, description, short option
+DEFINE_string 'ip' '' 'ip addresses'
+
+# parse the command-line
+parse_command_line "$@" || exit $?
+eval set -- "${FLAGS_ARGV}"
+
+if [[ "$#" < 1 ]]; then
+  logger_fatal "missing vagrant"
+  exit 1
+fi
+
+if [[ "$#" < 2 ]]; then
+  logger_fatal "missing veewee definition"
+  exit 1
+fi
+
+# pass arguments to entry point
+main "$@"

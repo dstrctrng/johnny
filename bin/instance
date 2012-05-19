@@ -31,17 +31,22 @@ function main {
   fi
   rsync --delete -ia "$vagrant_source"  "$shome/vagrant/$nm_instance/"
 
-  # configure network
-  if [[ -n "$FLAGS_ip" ]]; then
-    tmp_vagrantfile="$(mktemp -t XXXXXXXXX)"
-    {
-      head -1 "$shome/vagrant/$nm_instance/Vagrantfile"
+  # configure Vagrantfile
+  tmp_vagrantfile="$(mktemp -t XXXXXXXXX)"
+  {
+    head -1 "$shome/vagrant/$nm_instance/Vagrantfile"
+
+    # configure network
+    if [[ -n "$FLAGS_ip" ]]; then
       echo "config.vm.network :hostonly, '$FLAGS_ip'"
-      tail -n +2 "$shome/vagrant/$nm_instance/Vagrantfile" 
-    } > "$tmp_vagrantfile"
-    cp "$tmp_vagrantfile" "$shome/vagrant/$nm_instance/Vagrantfile"
-    rm -f "$tmp_vagrantfile"
-  fi
+    fi
+    # configure vagrant box
+    echo "config.vm.box '$nm_base'"
+
+    tail -n +2 "$shome/vagrant/$nm_instance/Vagrantfile" 
+  } > "$tmp_vagrantfile"
+  cp "$tmp_vagrantfile" "$shome/vagrant/$nm_instance/Vagrantfile"
+  rm -f "$tmp_vagrantfile"
 
   $shome/bin/vagrant $nm_instance up || true # errors out on the /vagrant mount
 

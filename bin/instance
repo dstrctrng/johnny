@@ -41,7 +41,7 @@ function main {
       echo "config.vm.network :hostonly, '$FLAGS_ip'"
     fi
     # configure vagrant box
-    echo "config.vm.box '$nm_base'"
+    echo "config.vm.box = '$nm_base'"
 
     tail -n +2 "$shome/vagrant/$nm_instance/Vagrantfile" 
   } > "$tmp_vagrantfile"

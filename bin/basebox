@@ -20,7 +20,11 @@ function main {
   $shome/bin/bundler
 
   figlet "build basebox"
-  bundle exec vagrant basebox build $nm_base -f -n
+  local vbox_gui=""
+  if [[ "$FLAGS_gui" = "$FLAGS_FALSE" ]]; then
+    vbox_gui="-n"
+  fi
+  bundle exec vagrant basebox build $nm_base -f $FLAGS_gui
 
   figlet "exporting basebox"
   bundle exec vagrant basebox export $nm_base
@@ -35,6 +39,7 @@ function main {
 
 # define command line options:
 #   var name, default, description, short option
+DEFINE_boolean 'gui' "$FLAGS_TRUE" 'guest is run with a GUI'
 
 # parse the command-line
 parse_command_line "$@" || exit $?

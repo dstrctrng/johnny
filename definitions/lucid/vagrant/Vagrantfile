@@ -1,5 +1,4 @@
 Vagrant::Config.run do |config|
   config.vm.box = "lucid"
   config.ssh.username = "root"
-  config.vm.network :hostonly, "xxx.xxx.xxx.xxx"
 end

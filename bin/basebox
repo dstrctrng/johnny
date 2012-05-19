@@ -19,18 +19,15 @@ function main {
 
   $shome/bin/bundler
 
-  figlet "build basebox"
   local vbox_gui=""
   if [[ "$FLAGS_gui" = "$FLAGS_FALSE" ]]; then
     vbox_gui="-n"
   fi
   bundle exec vagrant basebox build $nm_base -f $FLAGS_gui
 
-  figlet "exporting basebox"
   bundle exec vagrant basebox export $nm_base
   mv $nm_base.box $shome/boxes/
 
-  figlet "importing box"
   bundle exec vagrant box remove $nm_base 2>&1 || VBoxManage unregistervm $nm_base --delete || true
   bundle exec vagrant box add $nm_base $shome/boxes/$nm_base.box
 

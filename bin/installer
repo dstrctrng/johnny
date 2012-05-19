@@ -29,7 +29,6 @@ function main {
   rsync -ia $shome/definitions/$nm_base/preseed.cfg $shome/mnt/$nm_build.src/preseed/
   rsync -ia $shome/definitions/$nm_base/isolinux.cfg $shome/mnt/$nm_build.src/isolinux/
 
-  figlet "build installer"
   cd $shome/mnt/$nm_build.src
   mkisofs \
     -r -V "$nm_build" \

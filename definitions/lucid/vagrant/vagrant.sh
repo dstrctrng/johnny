@@ -15,6 +15,13 @@ sh /mnt/VBoxLinuxAdditions.run
 umount /mnt
 rm -f "$pth_guestadditions"
 
+# install ruby
+aptitude install -y ruby rubygems
+gem install rubygems-update -v 1.8.17
+cd /var/lib/gems/1.8/gems/rubygems-update-1.8.17
+ruby setup.rb
+gem uninstall rubygems-update -x -a || true
+
 # udev cleanup
 rm -rf /etc/udev/rules.d/70-persistent-net.rules
 mkdir -p /etc/udev/rules.d/70-persistent-net.rules

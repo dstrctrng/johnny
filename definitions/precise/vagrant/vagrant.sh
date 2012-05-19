@@ -3,9 +3,9 @@
 # proxy
 export http_proxy="http://$(echo $SSH_CONNECTION | cut -d= -f2 | awk '{print $1}'):3128"
 
-# vbox guest additions
 aptitude install -y build-essential
 
+# vbox guest additions
 ver_virtualbox="$(cat .vbox_version)"
 url_guestadditions="http://download.virtualbox.org/virtualbox/$ver_virtualbox/VBoxGuestAdditions_$ver_virtualbox.iso"
 pth_guestadditions="$HOME/VBoxGuestAdditions_$ver_virtualbox.iso"

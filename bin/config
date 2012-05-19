@@ -1,0 +1,3 @@
+#!/bin/bash
+
+bundle exec chef-solo -c "config/solo.rb" -N localhost

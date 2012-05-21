@@ -1,3 +1,37 @@
 #!/bin/bash
 
-bundle exec chef-solo -c "config/solo.rb" -N localhost
+#/ NAME
+#/     config -- builds a vagrant basebox, box, or instance
+#/
+#/ SYNOPSIS
+#/     config [vagrant]
+
+# figure out the project root under which bin, lib live
+shome="$(cd -P -- "$(dirname -- "$0")/.." && pwd -P)"
+
+# load a meat library
+source "$shome/bin/_prime" "$@"
+source $shome/.profile
+
+# entry point
+function main {
+  nm_box=$1; shift
+  
+  bundle exec chef-solo -c "config/solo.rb" -N "$nm_box"
+}
+
+# define command line options:
+#   var name, default, description, short option
+DEFINE_string 'ip' '' 'ip addresses'
+
+# parse the command-line
+parse_command_line "$@" || exit $?
+eval set -- "${FLAGS_ARGV}"
+
+if [[ "$#" < 1 ]]; then
+  logger_fatal "missing vagrant"
+  exit 1
+fi
+
+# pass arguments to entry point
+main "$@"

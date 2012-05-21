@@ -7,10 +7,11 @@ aptitude install -y build-essential
 
 # install ruby
 aptitude install -y ruby rubygems ruby-dev libopenssl-ruby
-gem install rubygems-update -v 1.8.17
-cd /var/lib/gems/1.8/gems/rubygems-update-1.8.17
+
+ver_rubygems='1.8.17'
+gem install rubygems-update -v "$ver_rubygems"
+cd "/var/lib/gems/1.8/gems/rubygems-update-$ver_rubygems"
 ruby setup.rb
-gem uninstall rubygems-update -x -a || true
 
 # vbox guest additions
 ver_virtualbox="$(cat .vbox_version)"

@@ -3,3 +3,4 @@
 /*.box
 /vagrant/*/.vagrant
 /vault
+/site/_site

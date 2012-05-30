@@ -1,4 +1,4 @@
 #!/bin/bash -e
 
-bundle config build.nokogiri --with-xslt-dir="$HOME/.macports/local"
+bundle config build.nokogiri --with-xml2-dir=/usr --with-xslt-dir="$MACPORTS_ROOT/local"
 bundle check > /dev/null || bundle --local --path vendor/bundle

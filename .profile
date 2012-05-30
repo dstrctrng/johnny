@@ -1,4 +1,4 @@
 function v {
-  cd ~/.virtualbox
+  cd ~/.ubuntu
   bin/vagrant -- "$@"
 }

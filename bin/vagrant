@@ -14,6 +14,7 @@ shome="$(cd -P -- "$(dirname -- "$0")/.." && pwd -P)"
 # load a meat library
 source "$shome/bin/_prime" "$@"
 source $shome/.profile
+require 'bundler'
 
 # entry point
 function main {
@@ -38,7 +39,7 @@ function main {
     ;;
   esac
 
-  $shome/bin/bundler
+  bundle_macports
 
   pushd $shome/vagrant/$nm_instance > /dev/null
 

@@ -12,12 +12,13 @@ shome="$(cd -P -- "$(dirname -- "$0")/.." && pwd -P)"
 # load a meat library
 source "$shome/bin/_prime" "$@"
 source $shome/.profile
+require 'bundler'
 
 # entry point
 function main {
   nm_base=$1; shift
 
-  $shome/bin/bundler
+  bundle_macports
 
   local vbox_gui=""
   if [[ "$FLAGS_gui" = "$FLAGS_FALSE" ]]; then

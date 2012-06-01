@@ -12,13 +12,14 @@ shome="$(cd -P -- "$(dirname -- "$0")/.." && pwd -P)"
 # load a meat library
 source "$shome/bin/_prime" "$@"
 source $shome/.profile
+require 'bundler'
 
 # entry point
 function main {
   nm_instance=$1; shift
   nm_base=$1; shift
 
-  $shome/bin/bundler
+  bundle_macports
 
   # copy vagrant templates
   local vagrant_source

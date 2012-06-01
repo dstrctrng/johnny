@@ -12,12 +12,13 @@ shome="$(cd -P -- "$(dirname -- "$0")/.." && pwd -P)"
 # load a meat library
 source "$shome/bin/_prime" "$@"
 source $shome/.profile
+require 'bundler'
 
 # entry point
 function main {
   nm_base=$1; shift
 
-  $shome/bin/bundler
+  bundle_macports
 
   nm_build=$(basename $(cat $shome/definitions/$nm_base/definition.rb  | grep iso_file | cut -d'"' -f2) .iso) # TODO weak
   nm_build="${nm_build/-unattended}"

@@ -35,7 +35,7 @@ function main {
   # configure Vagrantfile
   tmp_vagrantfile="$(mktemp -t XXXXXXXXX)"
   {
-    head -1 "$shome/vagrant/$nm_instance/Vagrantfile"
+    head -2 "$shome/vagrant/$nm_instance/Vagrantfile"
 
     # configure network
     if [[ -n "$FLAGS_ip" ]]; then
@@ -44,7 +44,7 @@ function main {
     # configure vagrant box
     echo "config.vm.box = '$nm_base'"
 
-    tail -n +2 "$shome/vagrant/$nm_instance/Vagrantfile" 
+    tail -n +3 "$shome/vagrant/$nm_instance/Vagrantfile" 
   } > "$tmp_vagrantfile"
   cp "$tmp_vagrantfile" "$shome/vagrant/$nm_instance/Vagrantfile"
   rm -f "$tmp_vagrantfile"

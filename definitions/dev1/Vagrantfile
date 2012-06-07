@@ -1,0 +1,7 @@
+Vagrant::Config.run do |cfg|
+  cfg.vm.define File.basename(File.dirname(__FILE__)).to_sym do |config|
+    config.vm.host_name = File.basename(File.dirname(__FILE__))
+    config.ssh.username = "root"
+    config.vm.provision :shell, :path => "provision.sh"
+  end
+end

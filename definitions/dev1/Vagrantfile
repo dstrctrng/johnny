@@ -3,5 +3,8 @@ Vagrant::Config.run do |cfg|
     config.vm.host_name = File.basename(File.dirname(__FILE__))
     config.ssh.username = "root"
     config.vm.provision :shell, :path => "provision.sh"
+    config.vm.forward_port 3306, 3306
+    config.vm.forward_port 11211, 11211
+    config.vm.forward_port 6379, 6379
   end
 end

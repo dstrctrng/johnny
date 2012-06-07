@@ -15,7 +15,7 @@ bundle exec chef-solo -c "config/solo.rb" -N localhost
 export DEBIAN_FRONTEND=noninteractive
 
 aptitude update
-aptitude install -y mysql-client mysql-server memcached nginx bind9 tzdata
+aptitude install -y -o Aptitude::CmdLine::Ignore-Trust-Violations=true mysql-client mysql-server memcached nginx bind9 tzdata
 
 mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root mysql
 

@@ -55,6 +55,9 @@ function main {
   cp "$tmp_vagrantfile" "$shome/vagrant/$nm_instance/Vagrantfile"
   rm -f "$tmp_vagrantfile"
 
+  if ! bundle exec vagrant box list | egrep "^$nm_base"'$'; then
+    bundle exec vagrant box add $nm_base boxes/$nm_base.box
+  fi
   $shome/bin/vagrant $nm_instance up || true # errors out on the /vagrant mount
 
   ver_virtualbox=$(VBoxManage --version | perl -pe 's{[^\.\d].*$}{}')

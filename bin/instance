@@ -34,8 +34,10 @@ function main {
   # check if the instance is already configured
   if [[ -f "$shome/vagrant/$nm_instance/.vagrant" ]]; then
     if [[ "$FLAGS_delete" = "$FLAGS_FALSE" ]]; then
-      logger_fatal "$nm_instance already exists, not recreating"
-      exit 1
+      if [[ "$FLAGS_reconfig" = "$FLAGS_FALSE" ]]; then
+        logger_fatal "$nm_instance already exists, not recreating"
+        exit 1
+      fi
     else
       $shome/bin/vagrant -- "$nm_instance" destroy -f 
     fi
@@ -79,12 +81,17 @@ function main {
 
   $shome/bin/vagrant rsync $nm_instance -- "$shome/vagrant/$nm_instance/vagrant.sh" $nm_instance:
   $shome/bin/vagrant ssh $nm_instance -- bash vagrant.sh
+  
+  if [[ "$FLAGS_reconfig" = "$FLAGS_TRUE" ]]; then
+    $shome/bin/vagrant $nm_instance provision
+  fi
 }
 
 # define command line options:
 #   var name, default, description, short option
 DEFINE_string 'ip' '' 'ip addresses'
 DEFINE_boolean 'delete' "$FLAGS_FALSE" 'delete the instance if it exists'
+DEFINE_boolean 'reconfig' "$FLAGS_FALSE" 'reconfigure the instance'
 
 # parse the command-line
 parse_command_line "$@" || exit $?

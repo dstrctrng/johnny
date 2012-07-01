@@ -52,6 +52,7 @@ function main {
   else
     vagrant_source="$shome/definitions/$nm_instance/."
   fi
+  mkdir -p "$shome/vagrant"
   rsync --delete -ia --exclude .vagrant "$vagrant_source"  "$shome/vagrant/$nm_instance/"
 
   # configure Vagrantfile

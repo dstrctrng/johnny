@@ -1,6 +1,6 @@
 /.bundle
 /vendor/bundle
 /*.box
-/vagrant/*/.vagrant
 /vault
 /site/_site
+/vagrant

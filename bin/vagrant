@@ -35,7 +35,18 @@ function main {
     ;;
     *)
       nm_instance="$1"; shift
-      nm_cmd="vagrant"
+      if [[ "$#" > 0 ]]; then
+        case "$1" in
+          ssh|scp|rsync)
+            nm_cmd="$1"; shift
+          ;;
+          *)
+            nm_cmd="vagrant"
+          ;;
+        esac
+      else
+        nm_cmd="vagrant"
+      fi
     ;;
   esac
 

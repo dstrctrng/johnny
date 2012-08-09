@@ -17,12 +17,12 @@ require 'bundler'
 # entry point
 function main {
   if [[ "$#" < 1 ]]; then
-    logger_fatal "missing vagrant"
+    logger_fatal "missing veewee definition"
     exit 1
   fi
 
   if [[ "$#" < 2 ]]; then
-    logger_fatal "missing veewee definition"
+    logger_fatal "missing basebox"
     exit 1
   fi
 

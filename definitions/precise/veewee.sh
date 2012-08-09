@@ -4,7 +4,7 @@
 umask 022
 
 # proxy
-#export http_proxy="http://$(echo $SSH_CONNECTION | cut -d= -f2 | awk '{print $1}'):3128"
+export http_proxy="http://$(echo $SSH_CONNECTION | cut -d= -f2 | awk '{print $1}'):3128"
 
 # dont prompt
 export DEBIAN_FRONTEND="noninteractive"

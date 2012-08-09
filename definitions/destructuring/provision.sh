@@ -4,7 +4,7 @@ if [[ ! -d "/vagrant" ]]; then exit 0; fi
 
 cd /vagrant/provision
 
-perl -pe 's{^(\s*Acquire::http::Proxy)}{#$1}' -i /etc/apt/apt.conf
+#perl -pe 's{^(\s*Acquire::http::Proxy)}{#$1}' -i /etc/apt/apt.conf
 
 aptitude hold linux-server linux-headers-server
 

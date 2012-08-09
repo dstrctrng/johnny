@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 # proxy
-export http_proxy="http://$(echo $SSH_CONNECTION | cut -d= -f2 | awk '{print $1}'):3128"
+#export http_proxy="http://$(echo $SSH_CONNECTION | cut -d= -f2 | awk '{print $1}'):3128"
 
 aptitude install -y build-essential
 

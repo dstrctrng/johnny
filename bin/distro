@@ -35,7 +35,7 @@ function main {
   mv $nm_veewee.box $shome/boxes/${nm_veewee}_.box
   VBoxManage unregistervm ${nm_veewee} --delete || true
 
-  bundle exec vagrant box remove ${nm_veewee}_
+  bundle exec vagrant box remove ${nm_veewee}_ || true
   bundle exec vagrant box add ${nm_veewee}_ $shome/boxes/${nm_veewee}_.box
   $shome/bin/instance "${nm_veewee}_" "${nm_veewee}"
   $shome/bin/package --destroy "$nm_veewee"

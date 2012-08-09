@@ -1,6 +1,6 @@
 Basebox to Vagrant instances
 ============================
-    bin/veewee precise
-    bin/veewee lucid
+    bin/distro precise
+    bin/distro lucid
     bin/instance lucid mehmon
     bin/instance precise sigmeh

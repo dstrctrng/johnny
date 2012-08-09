@@ -45,11 +45,11 @@ function main {
 
   # copy vagrant templates
   local vagrant_source
-  if [[ -n "$FLAGS_vagrant" ]]; then
-    if [[ -f $shome/definitions/$FLAGS_vagrant/Vagrantfile ]]; then
-      vagrant_source="$shome/definitions/$FLAGS_vagrant"
+  if [[ -n "$FLAGS_definition" ]]; then
+    if [[ -f $shome/definitions/$FLAGS_definition/Vagrantfile ]]; then
+      vagrant_source="$shome/definitions/$FLAGS_definition"
     else
-      logger_fatal "cannot find a Vagrantfile for $FLAGS_vagrant"
+      logger_fatal "cannot find a Vagrantfile for $FLAGS_definition"
       exit 1
     fi
   else
@@ -103,7 +103,7 @@ function main {
 #   var name, default, description, short option
 DEFINE_string 'ip' '' 'ip addresses'
 DEFINE_boolean 'destroy' "$FLAGS_FALSE" 'destroy the instance if it exists'
-DEFINE_string 'vagrant' "" 'Vagrant configuration' 
+DEFINE_string 'definition' "" 'Veewee/Vagrant definition' 
 DEFINE_boolean 'provision' "$FLAGS_TRUE" 'Run the provision scripts' 
 
 # parse the command-line

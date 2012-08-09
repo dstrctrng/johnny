@@ -104,7 +104,7 @@ function main {
 DEFINE_string 'ip' '' 'ip addresses'
 DEFINE_boolean 'destroy' "$FLAGS_FALSE" 'destroy the instance if it exists'
 DEFINE_string 'vagrant' "" 'Vagrant configuration' 
-DEFINE_boolean 'provision' "$FLAGS_FALSE" 'Run the provision scripts' 
+DEFINE_boolean 'provision' "$FLAGS_TRUE" 'Run the provision scripts' 
 
 # parse the command-line
 parse_command_line "$@" || exit $?

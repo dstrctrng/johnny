@@ -4,7 +4,7 @@
 #/     box -- builds and boxes a vagrant
 #/
 #/ SYNOPSIS
-#/     box [vagrant] [veewee]
+#/     box [veewee] [basebox]
 
 # figure out the project root under which bin, lib live
 shome="$(cd -P -- "$(dirname -- "$0")/.." && pwd -P)"
@@ -16,14 +16,24 @@ require 'bundler'
 
 # entry point
 function main {
-  nm_instance=$1; shift
-  nm_base=$1; shift
+  if [[ "$#" < 1 ]]; then
+    logger_fatal "missing vagrant"
+    exit 1
+  fi
+
+  if [[ "$#" < 2 ]]; then
+    logger_fatal "missing veewee definition"
+    exit 1
+  fi
+
+  local nm_veewee=$1; shift
+  local nm_basebox=$1; shift
 
   bundle_macports
 
-  $shome/bin/instance "$nm_instance" "$nm_base"
-  $shome/bin/package "$nm_instance"
-  bin/vagrant -- "$nm_instance" destroy -f
+  $shome/bin/instance "$nm_basebox" "$nm_veewee"
+  $shome/bin/package "$nm_basebox"
+  bin/vagrant -- "$nm_basebox" destroy -f
 }
 
 # define command line options:
@@ -33,16 +43,6 @@ DEFINE_string 'ip' '' 'ip addresses'
 # parse the command-line
 parse_command_line "$@" || exit $?
 eval set -- "${FLAGS_ARGV}"
-
-if [[ "$#" < 1 ]]; then
-  logger_fatal "missing vagrant"
-  exit 1
-fi
-
-if [[ "$#" < 2 ]]; then
-  logger_fatal "missing veewee definition"
-  exit 1
-fi
 
 # pass arguments to entry point
 main "$@"

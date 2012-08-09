@@ -4,7 +4,7 @@
 #/     setup-instance -- creates a vagrant from a veewee basebox
 #/
 #/ SYNOPSIS
-#/     setup-instance [vagrant] [veewee]
+#/     setup-instance [basebox] [vagrant]
 
 # figure out the project root under which bin, lib live
 shome="$(cd -P -- "$(dirname -- "$0")/.." && pwd -P)"
@@ -26,65 +26,65 @@ function main {
     exit 1
   fi
 
-  nm_instance=$1; shift
-  nm_base=$1; shift
+  local nm_basebox=$1; shift
+  local nm_vagrant=$1; shift
 
   bundle_macports
 
   # check if the instance is already configured
-  if [[ -f "$shome/vagrant/$nm_instance/.vagrant" ]]; then
+  if [[ -f "$shome/vagrant/$nm_vagrant/.vagrant" ]]; then
     if [[ "$FLAGS_delete" = "$FLAGS_FALSE" ]]; then
       if [[ "$FLAGS_reconfig" = "$FLAGS_FALSE" ]]; then
-        logger_fatal "$nm_instance already exists, not recreating"
+        logger_fatal "$nm_vagrant already exists, not recreating"
         exit 1
       fi
     else
-      $shome/bin/vagrant -- "$nm_instance" destroy -f 
+      $shome/bin/vagrant -- "$nm_vagrant" destroy -f 
     fi
   fi
 
   # copy vagrant templates
   local vagrant_source
-  if [[ -d $shome/definitions/$nm_base/vagrant ]]; then
-    vagrant_source="$shome/definitions/$nm_base/vagrant/."
-  elif [[ -f $shome/definitions/$nm_base/Vagrantfile ]]; then
-    vagrant_source="$shome/definitions/$nm_base/."
+  if [[ -d $shome/definitions/$nm_basebox/vagrant ]]; then
+    vagrant_source="$shome/definitions/$nm_basebox/vagrant/."
+  elif [[ -f $shome/definitions/$nm_basebox/Vagrantfile ]]; then
+    vagrant_source="$shome/definitions/$nm_basebox/."
   else
-    vagrant_source="$shome/definitions/$nm_instance/."
+    vagrant_source="$shome/definitions/$nm_vagrant/."
   fi
   mkdir -p "$shome/vagrant"
-  rsync --delete -ia --exclude .vagrant "$vagrant_source"  "$shome/vagrant/$nm_instance/"
+  rsync --delete -ia --exclude .vagrant "$vagrant_source"  "$shome/vagrant/$nm_vagrant/"
 
   # configure Vagrantfile
   tmp_vagrantfile="$(mktemp -t XXXXXXXXX)"
   {
-    head -2 "$shome/vagrant/$nm_instance/Vagrantfile"
+    head -2 "$shome/vagrant/$nm_vagrant/Vagrantfile"
 
     # configure network
     if [[ -n "$FLAGS_ip" ]]; then
       echo "config.vm.network :hostonly, '$FLAGS_ip'"
     fi
     # configure vagrant box
-    echo "config.vm.box = '$nm_base'"
+    echo "config.vm.box = '$nm_basebox'"
 
-    tail -n +3 "$shome/vagrant/$nm_instance/Vagrantfile" 
+    tail -n +3 "$shome/vagrant/$nm_vagrant/Vagrantfile" 
   } > "$tmp_vagrantfile"
-  cp "$tmp_vagrantfile" "$shome/vagrant/$nm_instance/Vagrantfile"
+  cp "$tmp_vagrantfile" "$shome/vagrant/$nm_vagrant/Vagrantfile"
   rm -f "$tmp_vagrantfile"
 
-  if ! bundle exec vagrant box list | egrep "^$nm_base"'$'; then
-    bundle exec vagrant box add $nm_base boxes/$nm_base.box
+  if ! bundle exec vagrant box list | egrep "^$nm_basebox"'$'; then
+    bundle exec vagrant box add $nm_basebox boxes/$nm_basebox.box
   fi
-  $shome/bin/vagrant $nm_instance up || true # errors out on the /vagrant mount
+  $shome/bin/vagrant $nm_vagrant up || true # errors out on the /vagrant mount
 
   ver_virtualbox=$(VBoxManage --version | perl -pe 's{[^\.\d].*$}{}')
-  echo "$ver_virtualbox" | $shome/bin/vagrant -- ssh $nm_instance tee .vbox_version
+  echo "$ver_virtualbox" | $shome/bin/vagrant -- ssh $nm_vagrant tee .vbox_version
 
-  $shome/bin/vagrant rsync $nm_instance -- "$shome/vagrant/$nm_instance/vagrant.sh" $nm_instance:
-  $shome/bin/vagrant ssh $nm_instance -- bash vagrant.sh
+  $shome/bin/vagrant rsync $nm_vagrant -- "$shome/vagrant/$nm_vagrant/vagrant.sh" $nm_vagrant:
+  $shome/bin/vagrant ssh $nm_vagrant -- bash vagrant.sh
   
   if [[ "$FLAGS_reconfig" = "$FLAGS_TRUE" ]]; then
-    $shome/bin/vagrant $nm_instance reload
+    $shome/bin/vagrant $nm_vagrant reload
   fi
 }
 

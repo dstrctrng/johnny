@@ -53,10 +53,10 @@ function main {
       exit 1
     fi
   else
-    if [[ -f $shome/definitions/$nm_basebox/Vagrantfile ]]; then
-      vagrant_source="$shome/definitions/$nm_basebox"
-    elif [[ -f $shome/definitions/$nm_instance/Vagrantfile ]]; then
+    if [[ -f $shome/definitions/$nm_instance/Vagrantfile ]]; then
       vagrant_source="$shome/definitions/$nm_instance"
+    elif [[ -f $shome/definitions/$nm_basebox/Vagrantfile ]]; then
+      vagrant_source="$shome/definitions/$nm_basebox"
     else
       logger_fatal "cannot find a Vagrantfile for $nm_basebox or $nm_instance"
       exit 1

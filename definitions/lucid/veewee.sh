@@ -11,9 +11,8 @@ export DEBIAN_FRONTEND="noninteractive"
 
 # update packages
 aptitude update
-aptitude install -q -y wget rsync
-aptitude search -F '%c %p' linux-image-[0123456789] | grep ^i | awk '{print $2}' | cut -d- -f3- | sed 's#^#linux-headers-#' | xargs aptitude install -q -y
-aptitude upgrade -y
+aptitude search -F '%c %p' linux-image-[0123456789] | grep ^i | awk '{print $2}' | cut -d- -f3- | sed 's#^#linux-headers-#' | xargs aptitude install -q -y wget rsync
+aptitude hold linux-server linux-headers-server 
 aptitude clean
 
 # ssh key

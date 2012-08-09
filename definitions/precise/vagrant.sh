@@ -5,7 +5,6 @@ export http_proxy="http://$(echo $SSH_CONNECTION | cut -d= -f2 | awk '{print $1}
 
 # vbox guest additions
 aptitude install -y build-essential
-aptitude hold linux-server linux-headers-server
 
 ver_virtualbox="$(cat .vbox_version)"
 url_guestadditions="http://download.virtualbox.org/virtualbox/$ver_virtualbox/VBoxGuestAdditions_$ver_virtualbox.iso"
@@ -16,14 +15,8 @@ sh /mnt/VBoxLinuxAdditions.run
 umount /mnt
 rm -f "$pth_guestadditions"
 
-# install ruby
-aptitude install -y ruby rubygems ruby-dev libopenssl-ruby
-
-ver_rubygems='1.8.17'
-gem install rubygems-update -v "$ver_rubygems"
-cd "/var/lib/gems/1.8/gems/rubygems-update-$ver_rubygems"
-ruby setup.rb
-gem install bundler
+# disable proxy
+perl -pe 's{^(\s*Acquire::http::Proxy)}{#$1}' -i /etc/apt/apt.conf
 
 # udev cleanup
 rm -rf /etc/udev/rules.d/70-persistent-net.rules
@@ -33,6 +26,3 @@ rm -rf /lib/udev/rules.d/75-persistent-net-generator.rules
 
 # dhcp cleanup
 rm -f /var/lib/dhcp3/*
-
-# disable proxy
-perl -pe 's{^(\s*Acquire::http::Proxy)}{#$1}' -i /etc/apt/apt.conf

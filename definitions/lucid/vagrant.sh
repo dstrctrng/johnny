@@ -3,17 +3,10 @@
 # proxy
 export http_proxy="http://$(echo $SSH_CONNECTION | cut -d= -f2 | awk '{print $1}'):3128"
 
-aptitude install -y build-essential
-
-# install ruby
-aptitude install -y ruby rubygems ruby-dev libopenssl-ruby
-
-ver_rubygems='1.8.17'
-gem install rubygems-update -v "$ver_rubygems"
-cd "/var/lib/gems/1.8/gems/rubygems-update-$ver_rubygems"
-ruby setup.rb
-
 # vbox guest additions
+aptitude install -y build-essential
+aptitude hold linux-server linux-headers-server
+
 ver_virtualbox="$(cat .vbox_version)"
 url_guestadditions="http://download.virtualbox.org/virtualbox/$ver_virtualbox/VBoxGuestAdditions_$ver_virtualbox.iso"
 pth_guestadditions="$HOME/VBoxGuestAdditions_$ver_virtualbox.iso"
@@ -22,6 +15,15 @@ mount -o loop "$pth_guestadditions" /mnt
 sh /mnt/VBoxLinuxAdditions.run
 umount /mnt
 rm -f "$pth_guestadditions"
+
+# install ruby
+aptitude install -y ruby rubygems ruby-dev libopenssl-ruby
+
+ver_rubygems='1.8.17'
+gem install rubygems-update -v "$ver_rubygems"
+cd "/var/lib/gems/1.8/gems/rubygems-update-$ver_rubygems"
+ruby setup.rb
+gem install bundler
 
 # udev cleanup
 rm -rf /etc/udev/rules.d/70-persistent-net.rules

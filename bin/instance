@@ -45,15 +45,26 @@ function main {
 
   # copy vagrant templates
   local vagrant_source
-  if [[ -d $shome/definitions/$nm_basebox/vagrant ]]; then
-    vagrant_source="$shome/definitions/$nm_basebox/vagrant/."
-  elif [[ -f $shome/definitions/$nm_basebox/Vagrantfile ]]; then
-    vagrant_source="$shome/definitions/$nm_basebox/."
+  if [[ -n "$FLAGS_vagrant" ]]; then
+    if [[ -f $shome/definitions/$FLAGS_vagrant/Vagrantfile ]]; then
+      vagrant_source="$shome/definitions/$FLAGS_vagrant"
+    else
+      logger_fatal "cannot find a Vagrantfile for $FLAGS_vagrant"
+      exit 1
+    fi
   else
-    vagrant_source="$shome/definitions/$nm_instance/."
+    if [[ -f $shome/definitions/$nm_basebox/Vagrantfile ]]; then
+      vagrant_source="$shome/definitions/$nm_basebox"
+    elif [[ -f $shome/definitions/$nm_instance/Vagrantfile ]]; then
+      vagrant_source="$shome/definitions/$nm_instance"
+    else
+      logger_fatal "cannot find a Vagrantfile for $nm_basebox or $nm_instance"
+      exit 1
+    fi
   fi
+
   mkdir -p "$shome/vagrant"
-  rsync --delete -ia --exclude .vagrant "$vagrant_source"  "$shome/vagrant/$nm_instance/"
+  rsync --delete -ia --exclude .vagrant "$vagrant_source/."  "$shome/vagrant/$nm_instance/"
 
   # configure Vagrantfile
   tmp_vagrantfile="$(mktemp -t XXXXXXXXX)"
@@ -93,6 +104,7 @@ function main {
 DEFINE_string 'ip' '' 'ip addresses'
 DEFINE_boolean 'delete' "$FLAGS_FALSE" 'delete the instance if it exists'
 DEFINE_boolean 'reconfig' "$FLAGS_FALSE" 'reconfigure the instance'
+DEFINE_string 'vagrant' "" 'Vagrant configuration' 
 
 # parse the command-line
 parse_command_line "$@" || exit $?

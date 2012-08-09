@@ -1,5 +1,20 @@
 #!/bin/bash -e
 
+# update packages
+aptitude update
+aptitude upgrade -q -y
+
+# install ruby
+aptitude install -y ruby rubygems ruby-dev libopenssl-ruby
+
+gem install rubygems-update
+cd /var/lib/gems/1.8/gems/rubygems-update-*
+ruby setup.rb
+gem install bundler
+
+# aptitude cleanup
+aptitude clean
+
 # udev cleanup
 rm -rf /etc/udev/rules.d/70-persistent-net.rules
 mkdir -p /etc/udev/rules.d/70-persistent-net.rules

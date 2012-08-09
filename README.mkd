@@ -1,6 +1,6 @@
 Basebox to Vagrant instances
 ============================
-    bin/basebox precise
-    bin/box precise destructuring
+    bin/veewee precise
+    bin/basebox precise destructuring
     bin/instance destructuring dev1
     bin/instance destructuring dev1

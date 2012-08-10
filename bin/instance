@@ -66,22 +66,13 @@ function main {
   mkdir -p "$shome/vagrant"
   rsync --delete -ia --exclude .vagrant "$vagrant_source/."  "$shome/vagrant/$nm_instance/"
 
-  # configure Vagrantfile
-  tmp_vagrantfile="$(mktemp -t XXXXXXXXX)"
-  {
-    head -2 "$shome/vagrant/$nm_instance/Vagrantfile"
-
-    # configure network
-    if [[ -n "$FLAGS_ip" ]]; then
-      echo "config.vm.network :hostonly, '$FLAGS_ip'"
-    fi
-    # configure vagrant box
-    echo "config.vm.box = '$nm_basebox'"
-
-    tail -n +3 "$shome/vagrant/$nm_instance/Vagrantfile" 
-  } > "$tmp_vagrantfile"
-  cp "$tmp_vagrantfile" "$shome/vagrant/$nm_instance/Vagrantfile"
-  rm -f "$tmp_vagrantfile"
+  # configure V=vagrant.yml
+  cat > "$shome/vagrant/$nm_instance/vagrant.yml" <<EOF
+---
+box: $nm_basebox
+provision: provision.sh
+network: $FLAGS_ip
+EOF
 
   if ! bundle exec vagrant box list | egrep "^$nm_basebox"'$'; then
     bundle exec vagrant box add $nm_basebox boxes/$nm_basebox.box

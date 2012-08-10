@@ -20,7 +20,7 @@ function main {
 
   bundle_macports
 
-  nm_build=$(basename $(cat $shome/definitions/$nm_base/definition.rb  | grep iso_file | cut -d'"' -f2) .iso) # TODO weak
+  nm_build=$(basename $(ryaml $shome/definitions/$nm_base/definition.yml iso_file) .iso)
   nm_build="${nm_build/-unattended}"
 
   mkdir -p $shome/mnt/$nm_build.src/{preseed,isolinux}

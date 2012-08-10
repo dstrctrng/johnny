@@ -86,7 +86,7 @@ EOF
   $shome/bin/vagrant ssh $nm_instance -- bash vagrant.sh
   
   if [[ "$FLAGS_provision" = "$FLAGS_TRUE" ]]; then
-    $shome/bin/vagrant $nm_instance reload
+    $shome/bin/vagrant $nm_instance provision
   fi
 }
 

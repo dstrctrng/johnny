@@ -50,7 +50,7 @@ cat <<EOF
 Host $nm_vagrant
   HostKeyAlias $nm_vagrant.vagrant
   Hostname $ip_vagrant
-  UserKnownHostsFile /dev/null
+  UserKnownHostsFile $shome/vagrant/$nm_vagrant/.ssh_known_hosts
   StrictHostKeyChecking no
   PasswordAuthentication no
   IdentityFile $HOME/.vagrant.d/insecure_private_key

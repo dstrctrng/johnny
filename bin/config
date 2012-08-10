@@ -46,9 +46,15 @@ function config_ssh {
     local nm_vagrant="$(basename "$a")"
     local ip_vagrant="$(ryaml "$a/vagrant.yml" network)"
 cat <<EOF
+
 Host $nm_vagrant
   HostKeyAlias $nm_vagrant.vagrant
   Hostname $ip_vagrant
+  UserKnownHostsFile /dev/null
+  StrictHostKeyChecking no
+  PasswordAuthentication no
+  IdentityFile $HOME/.vagrant.d/insecure_private_key
+  IdentitiesOnly yes
 EOF
   done
   set -f

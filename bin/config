@@ -43,6 +43,10 @@ function config_ssh {
       break
     fi
 
+    if [[ ! -f "$a/.vagrant" ]]; then
+      break
+    fi
+
     local nm_vagrant="$(basename "$a")"
     local ip_vagrant="$(ryaml "$a/vagrant.yml" network)"
 cat <<EOF

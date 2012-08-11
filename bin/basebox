@@ -1,10 +1,10 @@
 #!/bin/bash
 
 #/ NAME
-#/     basebox -- builds and boxes a vagrant
+#/     basebox - creates a basebox from a distro
 #/
 #/ SYNOPSIS
-#/     basebox [veewee] [basebox]
+#/     basebox [distro] [basebox]
 
 # figure out the project root under which bin, lib live
 shome="$(cd -P -- "$(dirname -- "$0")/.." && pwd -P)"
@@ -17,7 +17,7 @@ require 'bundler'
 # entry point
 function main {
   if [[ "$#" < 1 ]]; then
-    logger_fatal "missing veewee definition"
+    logger_fatal "missing distro"
     exit 1
   fi
 
@@ -26,19 +26,16 @@ function main {
     exit 1
   fi
 
-  local nm_veewee=$1; shift
+  local nm_distro=$1; shift
   local nm_basebox=$1; shift
 
-  bundle_macports
+  $shome/bin/instance $nm_distro $nm_basebox
+  $shome/bin/package --destroy $nm_basebox
 
-  $shome/bin/instance "$nm_veewee" "$nm_basebox"
-  $shome/bin/package "$nm_basebox"
-  bin/vagrant -- "$nm_basebox" destroy -f
 }
 
 # define command line options:
 #   var name, default, description, short option
-DEFINE_string 'ip' '' 'ip addresses'
 
 # parse the command-line
 parse_command_line "$@" || exit $?

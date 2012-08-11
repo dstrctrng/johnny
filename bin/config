@@ -40,11 +40,11 @@ function config_ssh {
   local a
   for a in $shome/vagrant/*; do 
     if [[ ! -d "$a" ]]; then
-      break
+      continue
     fi
 
     if [[ ! -f "$a/.vagrant" ]]; then
-      break
+      continue
     fi
 
     local nm_vagrant="$(basename "$a")"

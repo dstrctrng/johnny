@@ -79,13 +79,6 @@ EOF
 
   ver_virtualbox=$(VBoxManage --version | perl -pe 's{[^\.\d].*$}{}')
   echo "$ver_virtualbox" | $shome/bin/vagrant -- ssh $nm_instance tee .vbox_version
-
-  $shome/bin/vagrant rsync $nm_instance -- "$shome/vagrant/$nm_instance/vagrant.sh" $nm_instance:
-  $shome/bin/vagrant ssh $nm_instance -- bash vagrant.sh
-  
-  if [[ "$FLAGS_provision" = "$FLAGS_TRUE" ]]; then
-    $shome/bin/vagrant $nm_instance provision
-  fi
 }
 
 # define command line options:
@@ -93,7 +86,6 @@ EOF
 DEFINE_string 'ip' '' 'ip addresses'
 DEFINE_boolean 'destroy' "$FLAGS_FALSE" 'destroy the instance if it exists'
 DEFINE_string 'definition' "" 'Veewee/Vagrant definition' 
-DEFINE_boolean 'provision' "$FLAGS_TRUE" 'Run the provision scripts' 
 
 # parse the command-line
 parse_command_line "$@" || exit $?

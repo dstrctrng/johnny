@@ -2,6 +2,10 @@ Basebox to Vagrant instances
 ============================
     bin/distro precise
     bin/distro lucid
-    bin/instance --ip 192.168.88.101 --definition ruby lucid dev1
-    bin/instance --ip 192.168.88.102 --definition generic lucid dev2
-    bin/instance --ip 192.168.88.103 --definition generic precise dev3
+    bin/basebox lucid generic
+    bin/basebox lucid ruby
+    bin/instance --ip 192.168.88.100 generic dev0
+    bin/instance --ip 192.168.88.101 ruby dev1
+    bin/instance --ip 192.168.88.102 ruby dev2
+    bin/instance --ip 192.168.88.103 ruby dev3
+    bin/instance --ip 192.168.88.104 ruby dev4

@@ -5,7 +5,7 @@ umask 022
 export DEBIAN_FRONTEND=noninteractive
 
 # update packages
-cat > /etc/apt/sources.list.d/rvm.conf <<EOF
+cat > /etc/apt/sources.list.d/rvm.list <<EOF
 deb http://173.203.93.136/apt/zendesk/lucid/production binary/
 EOF
 

@@ -21,13 +21,15 @@ cat > /etc/apt/sources.list.d/rvm.conf <<EOF
 deb http://173.203.93.136/apt/zendesk/lucid/production binary/
 EOF
 
+aptitude update
+
 aptitude install -y openssl libreadline6 libreadline6-dev curl git-core zlib1g \
                     zlib1g-dev libssl-dev libyaml-dev libsqlite3-dev sqlite3 \
                     libxml2-dev libxslt-dev autoconf libc6-dev ncurses-dev \
                     automake libtool bison subversion
 
-aptitude update
-aptitude install -y -o Aptitude::CmdLine::Ignore-Trust-Violations=true rvm rvm-ree201103 rvm-ree rvm-ruby rvm-jruby
+aptitude install -y -o Aptitude::CmdLine::Ignore-Trust-Violations=true \
+                    rvm rvm-ree201103 rvm-ree rvm-ruby rvm-jruby
 
 # install mysql
 aptitude install -y mysql-client mysql-server tzdata

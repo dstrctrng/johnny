@@ -23,14 +23,9 @@ function main {
 
   local nm_veewee=$1; shift
 
-  local vbox_gui=""
-  if [[ "$FLAGS_gui" = "$FLAGS_FALSE" ]]; then
-    vbox_gui="-n"
-  fi
-
   bundle_macports
 
-  bundle exec vagrant basebox build $nm_veewee -f $FLAGS_gui
+  bundle exec vagrant basebox build $nm_veewee -f
   bundle exec vagrant basebox export $nm_veewee
   mv $nm_veewee.box $shome/boxes/${nm_veewee}_.box
   VBoxManage unregistervm ${nm_veewee} --delete || true
@@ -43,7 +38,6 @@ function main {
 
 # define command line options:
 #   var name, default, description, short option
-DEFINE_boolean 'gui' "$FLAGS_FALSE" 'guest is run with a GUI'
 
 # parse the command-line
 parse_command_line "$@" || exit $?

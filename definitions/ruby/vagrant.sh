@@ -5,8 +5,12 @@ umask 022
 export DEBIAN_FRONTEND=noninteractive
 
 # update packages
+cat > /etc/apt/sources.list.d/rvm.conf <<EOF
+deb http://173.203.93.136/apt/zendesk/lucid/production binary/
+EOF
+
 aptitude update
-aptitude upgrade -q -y
+aptitude upgrade -q -y -o Aptitude::CmdLine::Ignore-Trust-Violations=true
 
 # install ruby
 aptitude install -y ruby rubygems ruby-dev libopenssl-ruby
@@ -17,16 +21,13 @@ ruby setup.rb
 gem install bundler
 
 # install rvm
-cat > /etc/apt/sources.list.d/rvm.conf <<EOF
-deb http://173.203.93.136/apt/zendesk/lucid/production binary/
-EOF
-
-aptitude update
-
-aptitude install -y openssl libreadline6 libreadline6-dev curl git-core zlib1g \
+aptitude install -y openssl libreadline6 libreadline6-dev curl zlib1g \
                     zlib1g-dev libssl-dev libyaml-dev libsqlite3-dev sqlite3 \
                     libxml2-dev libxslt-dev autoconf libc6-dev ncurses-dev \
                     automake libtool bison subversion
+
+aptitude install -y -o Aptitude::CmdLine::Ignore-Trust-Violations=true \
+                    git-core
 
 aptitude install -y -o Aptitude::CmdLine::Ignore-Trust-Violations=true \
                     rvm rvm-ree201103 rvm-ree rvm-ruby rvm-jruby

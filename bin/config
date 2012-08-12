@@ -28,6 +28,9 @@ function main {
     ssh)
       config_ssh "$@"
       ;;
+    bash)
+      config_bash "$@"
+      ;;
     *)
       logger_fatal "dont know how to handle component $nm_component"
       exit 1
@@ -60,6 +63,32 @@ Host $nm_vagrant
   IdentityFile $HOME/.vagrant.d/insecure_private_key
   IdentitiesOnly yes
   User root
+EOF
+  done
+  set -f
+}
+
+function config_bash {
+  local dollar='$'
+
+  set +f
+  local a
+  for a in $shome/vagrant/*; do 
+    if [[ ! -d "$a" ]]; then
+      continue
+    fi
+
+    if [[ ! -f "$a/.vagrant" ]]; then
+      continue
+    fi
+
+    local nm_vagrant="$(basename "$a")"
+    local ip_vagrant="$(ryaml "$a/vagrant.yml" network)"
+
+cat <<EOF
+function $nm_vagrant {
+  $shome/bin/vagrant -- $nm_vagrant "${dollar}@"
+}
 EOF
   done
   set -f

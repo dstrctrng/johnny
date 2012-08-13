@@ -1,4 +1,9 @@
-function v {
-  cd ~/.ubuntu
-  bin/vagrant -- "$@"
-}
+#!/bin/bash
+
+if [[ "$#" > 0 ]]; then
+  UBUNTU="$1"; shift
+fi  
+
+: ${UBUNTU:="$(cd -P -- "$(dirname -- "${BASH_SOURCE}")/.." && pwd -P)"}
+
+source <("$UBUNTU/bin/config" bash)

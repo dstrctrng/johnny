@@ -5,5 +5,3 @@ if [[ "$#" > 0 ]]; then
 fi  
 
 : ${UBUNTU:="$(cd -P -- "$(dirname -- "${BASH_SOURCE}")/.." && pwd -P)"}
-
-source <("$UBUNTU/bin/config" bash)

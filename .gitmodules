@@ -13,3 +13,9 @@
 [submodule "definitions/osx"]
 	path = definitions/osx
 	url = https://github.com/destructuring/definition-osx
+[submodule "definitions/_distro"]
+	path = definitions/_distro
+	url = https://github.com/destructuring/definition-distro
+[submodule "definitions/_basebox"]
+	path = definitions/_basebox
+	url = https://github.com/destructuring/definition-basebox

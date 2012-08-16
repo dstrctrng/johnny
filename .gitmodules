@@ -1,0 +1,6 @@
+[submodule "definitions/lucid"]
+	path = definitions/lucid
+	url = https://github.com/destructuring/definition-lucid
+[submodule "definitions/precise"]
+	path = definitions/precise
+	url = https://github.com/destructuring/definition-precise

@@ -50,6 +50,7 @@ function main {
     ;;
   esac
 
+  export BUNDLE_GEMFILE="$shome/Gemfile"
   bundle_macports
 
   pushd $shome/vagrant/$nm_instance > /dev/null

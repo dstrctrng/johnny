@@ -4,3 +4,12 @@
 [submodule "definitions/precise"]
 	path = definitions/precise
 	url = https://github.com/destructuring/definition-precise
+[submodule "definitions/generic"]
+	path = definitions/generic
+	url = https://github.com/destructuring/definition-generic
+[submodule "definitions/network"]
+	path = definitions/network
+	url = https://github.com/destructuring/definition-network
+[submodule "definitions/osx"]
+	path = definitions/osx
+	url = https://github.com/destructuring/definition-osx

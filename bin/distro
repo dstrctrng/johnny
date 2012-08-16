@@ -33,8 +33,8 @@ function main {
   bundle exec vagrant box remove ${nm_veewee}_ || true
   bundle exec vagrant box add ${nm_veewee}_ $shome/boxes/${nm_veewee}_.box
   $shome/bin/instance "${nm_veewee}_" "${nm_veewee}"
-  $shome/bin/vagrant rsync $nm_vagrant -- "$shome/vagrant/$nm_vagrant/vagrant.sh" $nm_vagrant:
-  $shome/bin/vagrant ssh $nm_vagrant -- bash vagrant.sh
+  $shome/bin/vagrant rsync $nm_veewee -- "$shome/vagrant/$nm_veewee/vagrant.sh" $nm_veewee:
+  $shome/bin/vagrant ssh $nm_veewee -- bash vagrant.sh
   $shome/bin/package --destroy "$nm_veewee"
 }
 

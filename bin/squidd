@@ -1,4 +1,0 @@
-#!/bin/bash -e
-
-squid -z
-exec squid -d 1 -D -N -f config/squid.conf

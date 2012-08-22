@@ -33,7 +33,7 @@ function main {
   if [[ "$FLAGS_destroy" = "$FLAGS_TRUE" ]]; then
     opt_package="--destroy"
   fi
-  $shome/bin/instance --destroy $nm_distro $nm_basebox
+  $shome/bin/instance --gui --destroy $nm_distro $nm_basebox
   $shome/bin/package $opt_package $nm_basebox
 }
 

@@ -55,8 +55,7 @@ function main {
     if [[ -f $shome/definitions/$nm_instance/Vagrantfile ]]; then
       vagrant_source="$shome/definitions/$nm_instance"
     else
-      logger_fatal "cannot find a Vagrantfile for $nm_basebox or $nm_instance"
-      exit 1
+      vagrant_source="$shome/definitions/noop"
     fi
   fi
 
@@ -69,6 +68,7 @@ function main {
 box: $nm_basebox
 provision: provision.sh
 network: $FLAGS_ip
+gui: $FLAGS_gui
 EOF
 
   if ! bundle exec vagrant box list | egrep "^$nm_basebox"'$'; then
@@ -82,6 +82,7 @@ EOF
 DEFINE_string 'ip' '' 'ip addresses'
 DEFINE_boolean 'destroy' "$FLAGS_FALSE" 'destroy the instance if it exists'
 DEFINE_string 'definition' "" 'Veewee/Vagrant definition' 
+DEFINE_boolean 'gui' "$FLAGS_FALSE" 'Run with VirtualBox GUI'
 
 # parse the command-line
 parse_command_line "$@" || exit $?

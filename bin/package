@@ -39,6 +39,7 @@ function main {
 
   if [[ "$FLAGS_destroy" = "$FLAGS_TRUE" ]]; then
     $shome/bin/vagrant -- "$nm_instance" destroy -f
+    rm -rf $shome/vagrant/$nm_instance
   fi
 }
 

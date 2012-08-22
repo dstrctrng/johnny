@@ -38,6 +38,7 @@ function main {
       exit 1
     else
       $shome/bin/vagrant -- "$nm_instance" destroy -f || true
+      rm -rf $shome/vagrant/$nm_instance
     fi
   fi
 

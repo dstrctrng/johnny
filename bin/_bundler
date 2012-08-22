@@ -1,7 +1,5 @@
 #!/bin/bash
 
-export VAGRANT_LOG=INFO
-
 function bundle_macports {
   if [[ -n "${MACPORTS:-}" ]]; then
     bundle config build.nokogiri --with-xml2-include=$MACPORTS/include/libxml2 --with-xml2-lib=$MACPORTS/lib --with-xslt-dir=$MACPORTS

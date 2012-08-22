@@ -1,10 +1,10 @@
 #!/bin/bash
 
 #/ NAME
-#/     build-box -- build and export a vagrant basebox
+#/     distro -- build and export a vagrant distro basebox
 #/
 #/ SYNOPSIS
-#/     build-box [veewee]
+#/     distro [veewee]
 
 # figure out the project root under which bin, lib live
 shome="$(cd -P -- "$(dirname -- "$0")/.." && pwd -P)"
@@ -25,16 +25,10 @@ function main {
 
   bundle_macports
 
-  bundle exec vagrant basebox build $nm_veewee -f
-  bundle exec vagrant basebox export $nm_veewee
-  mv $nm_veewee.box $shome/boxes/archive/${nm_veewee}_.box
-  VBoxManage unregistervm ${nm_veewee} --delete || true
-
-  bundle exec vagrant box remove ${nm_veewee}_ || true
-  bundle exec vagrant box remove ${nm_veewee} || true
-  bundle exec vagrant box add ${nm_veewee}_ $shome/boxes/archive/${nm_veewee}_.box
-
-  $shome/bin/distro2 "$nm_veewee"
+  $shome/bin/instance "${nm_veewee}_" "${nm_veewee}"
+  $shome/bin/vagrant rsync $nm_veewee -- "$shome/vagrant/$nm_veewee/vagrant.sh" $nm_veewee:
+  $shome/bin/vagrant ssh $nm_veewee -- bash vagrant.sh
+  $shome/bin/package --destroy "$nm_veewee"
 }
 
 # define command line options:

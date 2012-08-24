@@ -3,5 +3,5 @@
 if [[ "$#" > 0 ]]; then
   UBUNTU="$1"; shift
 else
-  UBUNTU="$(cd -P -- "$(dirname -- "${BASH_SOURCE}")/.." && pwd -P)"
+  : ${UBUNTU:="$(cd -P -- "$(dirname -- "${BASH_SOURCE}")/.." && pwd -P)"}
 fi  

@@ -5,3 +5,5 @@ if [[ "$#" > 0 ]]; then
 else
   : ${UBUNTU:="$(cd -P -- "$(dirname -- "${BASH_SOURCE}")/.." && pwd -P)"}
 fi  
+
+export UBUNTU

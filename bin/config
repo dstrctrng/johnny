@@ -87,7 +87,9 @@ function config_bash {
 
 cat <<EOF
 function $nm_vagrant {
-  $shome/bin/vagrant -- $nm_vagrant "${dollar}@"
+  ( source $shome/bin/_profile $UBUNTU
+    $shome/bin/vagrant -- $nm_vagrant "${dollar}@"
+  )
 }
 EOF
   done

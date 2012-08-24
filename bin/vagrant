@@ -53,9 +53,9 @@ function main {
   export BUNDLE_GEMFILE="$shome/Gemfile"
   bundle_macports
 
-  pushd $shome/vagrant/$nm_instance > /dev/null
+  pushd $UBUNTU/vagrant/$nm_instance > /dev/null
 
-  pth_config="$shome/vagrant/$nm_instance/.ssh_config"
+  pth_config="$UBUNTU/vagrant/$nm_instance/.ssh_config"
 
   if [[ .vagrant -nt $pth_config ]]; then
     {
@@ -78,7 +78,7 @@ function main {
     rsync) rsync -ia -e "ssh -F $pth_config" "$@" ;;
 
     vagrant)     
-      cd $shome/vagrant/$nm_instance
+      cd $UBUNTU/vagrant/$nm_instance
       if [[ "$#" < 1 ]]; then
         set -- 'ssh'
       fi

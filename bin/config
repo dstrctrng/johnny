@@ -41,7 +41,7 @@ function main {
 function config_ssh {
   set +f
   local a
-  for a in $shome/vagrant/*; do 
+  for a in $UBUNTU/vagrant/*; do 
     if [[ ! -d "$a" ]]; then
       continue
     fi
@@ -57,7 +57,7 @@ cat <<EOF
 Host $nm_vagrant
   HostKeyAlias $nm_vagrant.vagrant
   Hostname $ip_vagrant
-  UserKnownHostsFile $shome/vagrant/$nm_vagrant/.ssh_known_hosts
+  UserKnownHostsFile $UBUNTU/vagrant/$nm_vagrant/.ssh_known_hosts
   StrictHostKeyChecking no
   PasswordAuthentication no
   IdentityFile $HOME/.vagrant.d/insecure_private_key
@@ -73,7 +73,7 @@ function config_bash {
 
   set +f
   local a
-  for a in $shome/vagrant/*; do 
+  for a in $UBUNTU/vagrant/*; do 
     if [[ ! -d "$a" ]]; then
       continue
     fi

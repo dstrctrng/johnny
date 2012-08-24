@@ -26,7 +26,7 @@ function main {
   bundle_macports
 
   $shome/bin/instance "${nm_veewee}_" "${nm_veewee}"
-  $shome/bin/vagrant rsync $nm_veewee -- "$shome/vagrant/$nm_veewee/vagrant.sh" $nm_veewee:
+  $shome/bin/vagrant rsync $nm_veewee -- "$UBUNTU/vagrant/$nm_veewee/vagrant.sh" $nm_veewee:
   $shome/bin/vagrant ssh $nm_veewee -- bash vagrant.sh
   $shome/bin/package --destroy "$nm_veewee"
 }

@@ -32,13 +32,13 @@ function main {
   bundle_macports
 
   # check if the instance is already configured
-  if [[ -f "$shome/vagrant/$nm_instance/.vagrant" ]]; then
+  if [[ -f "$UBUNTU/vagrant/$nm_instance/.vagrant" ]]; then
     if [[ "$FLAGS_destroy" = "$FLAGS_FALSE" ]]; then
       logger_fatal "$nm_instance already exists, not recreating"
       exit 1
     else
       $shome/bin/vagrant -- "$nm_instance" destroy -f || true
-      rm -rf $shome/vagrant/$nm_instance
+      rm -rf $UBUNTU/vagrant/$nm_instance
     fi
   fi
 
@@ -59,11 +59,11 @@ function main {
     fi
   fi
 
-  mkdir -p "$shome/vagrant"
-  rsync --delete -ia --exclude .vagrant "$vagrant_source/."  "$shome/vagrant/$nm_instance/"
+  mkdir -p "$UBUNTU/vagrant"
+  rsync --delete -ia --exclude .vagrant "$vagrant_source/."  "$UBUNTU/vagrant/$nm_instance/"
 
   # configure V=vagrant.yml
-  cat > "$shome/vagrant/$nm_instance/vagrant.yml" <<EOF
+  cat > "$UBUNTU/vagrant/$nm_instance/vagrant.yml" <<EOF
 ---
 box: $nm_basebox
 provision: provision.sh

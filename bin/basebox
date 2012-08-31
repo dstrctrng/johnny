@@ -33,14 +33,15 @@ function main {
   if [[ "$FLAGS_destroy" = "$FLAGS_TRUE" ]]; then
     opt_package="--destroy"
   fi
-  $shome/bin/instance --destroy --definition "$FLAGS_definition" $nm_distro $nm_basebox
-  $shome/bin/package $opt_package $nm_basebox
+  $shome/bin/instance $nm_distro $nm_basebox
+  $shome/bin/package --destroy $opt_package $nm_basebox
+  bundle exec vagrant box remove $nm_basebox || true
+  bundle exec vagrant box add $nm_basebox $shome/boxes/archive/$nm_basebox.box
 }
 
 # define command line options:
 #   var name, default, description, short option
 DEFINE_boolean 'destroy' "$FLAGS_TRUE" "destroy the instance after packaging"
-DEFINE_string 'definition' "noop" 'Veewee/Vagrant definition' 
 
 # parse the command-line
 parse_command_line "$@" || exit $?

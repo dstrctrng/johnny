@@ -29,6 +29,8 @@ function main {
   $shome/bin/vagrant rsync $nm_veewee -- "$UBUNTU/vagrant/$nm_veewee/vagrant.sh" $nm_veewee:
   $shome/bin/vagrant ssh $nm_veewee -- bash vagrant.sh
   $shome/bin/package --destroy "$nm_veewee"
+  bundle exec vagrant box remove $nm_veewee || true
+  bundle exec vagrant box add $nm_veewee $shome/boxes/archive/$nm_veewee.box
 }
 
 # define command line options:

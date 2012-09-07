@@ -29,8 +29,6 @@ function main {
   local nm_basebox=$1; shift
   local nm_instance=$1; shift
 
-  bundle_macports
-
   # check if the instance is already configured
   if [[ -f "$UBUNTU/vagrant/$nm_instance/.vagrant" ]]; then
     if [[ "$FLAGS_destroy" = "$FLAGS_FALSE" ]]; then

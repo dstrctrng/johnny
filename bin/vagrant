@@ -51,7 +51,6 @@ function main {
   esac
 
   export BUNDLE_GEMFILE="$shome/Gemfile"
-  bundle_macports
 
   pushd $UBUNTU/vagrant/$nm_instance > /dev/null
 

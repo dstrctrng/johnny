@@ -16,11 +16,9 @@ require 'bundler'
 
 # entry point
 function main {
-  nm_base=$1; shift
+  local nm_base=$1; shift
 
-  bundle_macports
-
-  nm_build=$(basename $(ryaml $shome/definitions/$nm_base/definition.yml iso_file) .iso)
+  local nm_build=$(basename $(ryaml $shome/definitions/$nm_base/definition.yml iso_file) .iso)
   nm_build="${nm_build/-unattended}"
 
   mkdir -p $shome/mnt/$nm_build.src/{preseed,isolinux}
@@ -30,13 +28,12 @@ function main {
   rsync -ia $shome/definitions/$nm_base/preseed.cfg $shome/mnt/$nm_build.src/preseed/
   rsync -ia $shome/definitions/$nm_base/isolinux.cfg $shome/mnt/$nm_build.src/isolinux/
 
-  cd $shome/mnt/$nm_build.src
+  pushd $shome/mnt/$nm_build.src
   mkisofs \
     -r -V "$nm_build" \
     -cache-inodes -J -l -b isolinux/isolinux.bin -c isolinux/boot.cat \
     -no-emul-boot -boot-load-size 4 -boot-info-table -o "$shome/iso/$nm_build-unattended.iso" .
-
-  cd $shome
+  popd
 }
 
 # define command line options:

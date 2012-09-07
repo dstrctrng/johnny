@@ -2,7 +2,11 @@
 
 function bundle_macports {
   if [[ -n "${MACPORTS:-}" ]]; then
-    bundle config build.nokogiri --with-xml2-include=$MACPORTS/include/libxml2 --with-xml2-lib=$MACPORTS/lib --with-xslt-dir=$MACPORTS
+    bundle config build.nokogiri \
+      --with-xml2-include=$MACPORTS/include/libxml2 --with-xml2-lib=$MACPORTS/lib --with-xslt-dir=$MACPORTS
   fi
-  bundle check > /dev/null || bundle --local --path vendor/bundle
+  
+  (cd $shome && bundle check > /dev/null || bundle --local --path vendor/bundle)
 }
+
+bundler_macports

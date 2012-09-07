@@ -16,17 +16,15 @@ require 'bundler'
 
 # entry point
 function main {
-  nm_base=$1; shift
+  local nm_base=$1; shift
 
-  bundle_macports
-
-  nm_build=$(basename $(ryaml $shome/definitions/$nm_base/definition.yml iso_file) .iso)
+  local nm_build=$(basename $(ryaml $shome/definitions/$nm_base/definition.yml iso_file) .iso)
   nm_build="${nm_build/-unattended}"
   if [[ -d "$shome/mnt/$nm_build.src" ]]; then
     exit 0
   fi
 
-  url_build=$(ryaml $shome/definitions/$nm_base/definition.yml iso_src)
+  local url_build=$(ryaml $shome/definitions/$nm_base/definition.yml iso_src)
   wget -nv -c "$url_build" -O "$shome/iso/$nm_build.iso" || true # 404 does not return error code
 
   hdiutil mount -mountpoint "$(pwd)/mnt/$nm_build.mnt" $shome/iso/$nm_build.iso

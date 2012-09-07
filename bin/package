@@ -29,8 +29,6 @@ function main {
   local nm_instance=$1; shift
   local nm_base=$1; shift
 
-  bundle_macports
-
   $shome/bin/vagrant $nm_instance package
   mv $UBUNTU/vagrant/$nm_instance/package.box $shome/boxes/archive/$nm_base.box
 

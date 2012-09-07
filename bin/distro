@@ -1,10 +1,10 @@
 #!/bin/bash
 
 #/ NAME
-#/     build-box -- build and export a vagrant basebox
+#/     distro -- build and export a vagrant basebox
 #/
 #/ SYNOPSIS
-#/     build-box [veewee]
+#/     distro [veewee]
 
 # figure out the project root under which bin, lib live
 shome="$(cd -P -- "$(dirname -- "$0")/.." && pwd -P)"
@@ -22,8 +22,6 @@ function main {
   fi
 
   local nm_veewee=$1; shift
-
-  bundle_macports
 
   bundle exec vagrant basebox build $nm_veewee -f
   bundle exec vagrant basebox export $nm_veewee

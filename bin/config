@@ -21,8 +21,6 @@ function main {
     exit 1
   fi
 
-  bundle_macports
-
   local nm_component=$1; shift
   case "$nm_component" in
     ssh)

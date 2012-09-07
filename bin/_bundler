@@ -9,4 +9,4 @@ function bundle_macports {
   (cd $shome && bundle check > /dev/null || bundle --local --path vendor/bundle)
 }
 
-bundler_macports
+bundle_macports

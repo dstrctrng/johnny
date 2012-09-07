@@ -22,15 +22,16 @@ function main {
   fi
 
   local nm_veewee=$1; shift
+  local ver_veewee="$(cat $shome/definitions/$nm_veewee/VERSION)"
 
   bundle exec vagrant basebox build $nm_veewee -f
   bundle exec vagrant basebox export $nm_veewee
-  mv $nm_veewee.box $shome/boxes/archive/${nm_veewee}_.box
+  mv $nm_veewee.box $shome/boxes/archive/${nm_veewee}-${ver_veewee}_.box
   VBoxManage unregistervm ${nm_veewee} --delete || true
 
   bundle exec vagrant box remove ${nm_veewee}_ || true
   bundle exec vagrant box remove ${nm_veewee} || true
-  bundle exec vagrant box add ${nm_veewee}_ $shome/boxes/archive/${nm_veewee}_.box
+  bundle exec vagrant box add ${nm_veewee}_ $shome/boxes/archive/${nm_veewee}-${ver_veewee}_.box
 
   $shome/bin/distro2 "$nm_veewee"
 }

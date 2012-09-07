@@ -28,9 +28,10 @@ function main {
 
   local nm_instance=$1; shift
   local nm_base=$1; shift
+  local ver_veewee="$(cat $shome/definitions/$nm_base/VERSION)"
 
   $shome/bin/vagrant $nm_instance package
-  mv $UBUNTU/vagrant/$nm_instance/package.box $shome/boxes/archive/$nm_base.box
+  mv $UBUNTU/vagrant/$nm_instance/package.box $shome/boxes/archive/${nm_base}-${ver_veewee}.box
 
   if [[ "$FLAGS_destroy" = "$FLAGS_TRUE" ]]; then
     $shome/bin/vagrant -- "$nm_instance" destroy -f

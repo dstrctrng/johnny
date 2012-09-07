@@ -28,6 +28,7 @@ function main {
 
   local nm_distro=$1; shift
   local nm_basebox=$1; shift
+  local ver_basebox="$(cat $shome/definitions/$nm_basebox/VERSION)"
 
   local opt_package=""
   if [[ "$FLAGS_destroy" = "$FLAGS_TRUE" ]]; then
@@ -36,7 +37,7 @@ function main {
   $shome/bin/instance $nm_distro $nm_basebox
   $shome/bin/package --destroy $opt_package $nm_basebox
   bundle exec vagrant box remove $nm_basebox || true
-  bundle exec vagrant box add $nm_basebox $shome/boxes/archive/$nm_basebox.box
+  bundle exec vagrant box add $nm_basebox $shome/boxes/archive/${nm_basebox}-${ver_basebox}.box
 }
 
 # define command line options:

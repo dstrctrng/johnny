@@ -1,10 +1,10 @@
 #!/bin/bash
 
 #/ NAME
-#/     distro2 -- build and export a vagrant distro basebox
+#/     distro1 -- build and export a vagrant distro box
 #/
 #/ SYNOPSIS
-#/     distro2 [veewee]
+#/     distro1 [veewee]
 
 # figure out the project root under which bin, lib live
 shome="$(cd -P -- "$(dirname -- "$0")/.." && pwd -P)"
@@ -24,12 +24,14 @@ function main {
   local nm_veewee=$1; shift
   local ver_veewee="$(cat $shome/definitions/$nm_veewee/VERSION)"
 
-  $shome/bin/instance "${nm_veewee}_" "${nm_veewee}"
-  $shome/bin/vagrant rsync $nm_veewee -- "$UBUNTU/vagrant/$nm_veewee/vagrant.sh" $nm_veewee:
-  $shome/bin/vagrant ssh $nm_veewee -- bash vagrant.sh
-  $shome/bin/package --destroy "$nm_veewee"
-  bundle exec vagrant box remove $nm_veewee || true
-  bundle exec vagrant box add $nm_veewee $shome/boxes/archive/${nm_veewee}-${ver_veewee}.box
+  bundle exec vagrant basebox build $nm_veewee -f
+  bundle exec vagrant basebox export $nm_veewee
+  mv $nm_veewee.box $shome/boxes/archive/${nm_veewee}-${ver_veewee}_.box
+  VBoxManage unregistervm ${nm_veewee} --delete || true
+
+  bundle exec vagrant box remove ${nm_veewee}_ || true
+  bundle exec vagrant box remove ${nm_veewee} || true
+  bundle exec vagrant box add ${nm_veewee}_ $shome/boxes/archive/${nm_veewee}-${ver_veewee}_.box
 }
 
 # define command line options:

@@ -57,8 +57,14 @@ function main {
     fi
   fi
 
+  if ! bundle exec vagrant box list | egrep "^$nm_basebox"'$'; then
+    bundle exec vagrant box add $nm_basebox boxes/$nm_basebox.box
+  fi
+
   mkdir -p "$UBUNTU/vagrant"
-  rsync --delete -ia --exclude .vagrant "$vagrant_source/."  "$UBUNTU/vagrant/$nm_instance/"
+  pushd $vagrant_source
+  (export _AO_WORKAREA="$nm_instance"; bin/deploy localhost)
+  popd
 
   # configure V=vagrant.yml
   cat > "$UBUNTU/vagrant/$nm_instance/vagrant.yml" <<EOF
@@ -69,9 +75,6 @@ network: $FLAGS_ip
 gui: $FLAGS_gui
 EOF
 
-  if ! bundle exec vagrant box list | egrep "^$nm_basebox"'$'; then
-    bundle exec vagrant box add $nm_basebox boxes/$nm_basebox.box
-  fi
   $shome/bin/vagrant $nm_instance up || true # errors out on the /vagrant mount
 }
 

@@ -58,9 +58,9 @@ function main {
     bundle exec vagrant box add $nm_basebox boxes/$nm_basebox.box
   fi
 
-  # configure V=vagrant.yml
-  mkdir -p "$UBUNTU/vagrant/$nm_instance"
-  cat > "$UBUNTU/vagrant/$nm_instance/vagrant.yml" <<EOF
+  # configure vagrant.yml
+  mkdir -p "$UBUNTU/vagrant"
+  cat > "$UBUNTU/vagrant/$nm_instance.yml" <<EOF
 ---
 box: $nm_basebox
 provision: provision.sh

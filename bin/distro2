@@ -22,11 +22,11 @@ function main {
   fi
 
   local nm_veewee=$1; shift
-  local ver_veewee="$(cat $shome/definitions/$nm_veewee/VERSION)"
-
   $shome/bin/instance "${nm_veewee}_" "${nm_veewee}"
   $shome/bin/vagrant rsync $nm_veewee -- "$UBUNTU/vagrant/$nm_veewee/vagrant.sh" $nm_veewee:
   $shome/bin/vagrant ssh $nm_veewee -- bash vagrant.sh
+
+  local ver_veewee="$(cat $shome/definitions/$nm_veewee/VERSION)"
   $shome/bin/package "$nm_veewee"
   bundle exec vagrant box remove $nm_veewee || true
   bundle exec vagrant box add $nm_veewee $shome/boxes/archive/${nm_veewee}-${ver_veewee}.box

@@ -31,10 +31,7 @@ function main {
 
   # check if the instance is already configured
   if [[ -f "$UBUNTU/vagrant/$nm_instance/.vagrant" ]]; then
-    if [[ "$FLAGS_destroy" = "$FLAGS_FALSE" ]]; then
-      logger_fatal "$nm_instance already exists, not recreating"
-      exit 1
-    else
+    if [[ "$FLAGS_destroy" = "$FLAGS_TRUE" ]]; then
       $shome/bin/vagrant -- "$nm_instance" destroy -f || true
       rm -rf $UBUNTU/vagrant/$nm_instance
     fi
@@ -57,12 +54,12 @@ function main {
     fi
   fi
 
-  mkdir -p "$UBUNTU/vagrant"
-  pushd $vagrant_source
-  (export _AO_WORKAREA="$UBUNTU/vagrant/$nm_instance"; bin/deploy localhost)
-  popd
+  if ! bundle exec vagrant box list | egrep "^$nm_basebox"'$'; then
+    bundle exec vagrant box add $nm_basebox boxes/$nm_basebox.box
+  fi
 
   # configure V=vagrant.yml
+  mkdir -p "$UBUNTU/vagrant/$nm_instance"
   cat > "$UBUNTU/vagrant/$nm_instance/vagrant.yml" <<EOF
 ---
 box: $nm_basebox
@@ -71,11 +68,9 @@ network: $FLAGS_ip
 gui: $FLAGS_gui
 EOF
 
-  if ! bundle exec vagrant box list | egrep "^$nm_basebox"'$'; then
-    bundle exec vagrant box add $nm_basebox boxes/$nm_basebox.box
-  fi
-
-  $shome/bin/vagrant $nm_instance up || true # errors out on the /vagrant mount
+  pushd $vagrant_source
+  (export _AO_WORKAREA="$UBUNTU/vagrant/$nm_instance"; bin/deploy localhost)
+  popd
 }
 
 # define command line options:

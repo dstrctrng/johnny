@@ -50,9 +50,8 @@ function main {
     ;;
   esac
 
-  export BUNDLE_GEMFILE="$shome/Gemfile"
-
   pushd $UBUNTU/vagrant/$nm_instance > /dev/null
+  bundle check 2>&1 >/dev/null || { bundle --quiet install --local --path vendor/bundle || bundle check > /dev/null; }
 
   pth_config="$UBUNTU/vagrant/$nm_instance/.ssh_config"
 
@@ -68,7 +67,6 @@ function main {
     hostname=$(awk '$1 == "HostName" { print $2 }' $pth_config)
     ssh-keyscan -p $port $hostname,$nm_instance,"[$hostname]:$port" 2>&- > .ssh_known_hosts
   fi
-
   popd > /dev/null
 
   case "$nm_cmd" in
@@ -77,11 +75,13 @@ function main {
     rsync) rsync -ia -e "ssh -F $pth_config" "$@" ;;
 
     vagrant)     
-      cd $UBUNTU/vagrant/$nm_instance
+      pushd $UBUNTU/vagrant/$nm_instance
       if [[ "$#" < 1 ]]; then
         set -- 'ssh'
       fi
+      bundle check 2>&1 >/dev/null || { bundle --quiet install --local --path vendor/bundle || bundle check > /dev/null; }
       bundle exec vagrant "$@" 
+      popd
     ;;
   esac
 }

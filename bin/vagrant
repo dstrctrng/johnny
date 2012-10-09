@@ -51,7 +51,7 @@ function main {
   esac
 
   pushd $UBUNTU/vagrant/$nm_instance > /dev/null
-  bundle check 2>&1 >/dev/null || { bundle --quiet install --local --path vendor/bundle || bundle check > /dev/null; }
+  bundle check 2>&1 >/dev/null || { bundle install --quiet --local --path vendor/bundle || bundle check > /dev/null; }
 
   pth_config="$UBUNTU/vagrant/$nm_instance/.ssh_config"
 
@@ -79,7 +79,7 @@ function main {
       if [[ "$#" < 1 ]]; then
         set -- 'ssh'
       fi
-      bundle check 2>&1 >/dev/null || { bundle --quiet install --local --path vendor/bundle || bundle check > /dev/null; }
+      bundle check 2>&1 >/dev/null || { bundle install --quiet --local --path vendor/bundle || bundle check > /dev/null; }
       bundle exec vagrant "$@" 
       popd
     ;;

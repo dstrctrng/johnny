@@ -10,7 +10,7 @@
 shome="$(cd -P -- "$(dirname -- "$0")/.." && pwd -P)"
 
 # load a meat library
-source "$shome/bin/_prime" "$@"
+source "$shome/libexec/_prime" "$@"
 require 'profile'
 require 'bundler'
 
@@ -85,7 +85,7 @@ function config_bash {
 
 cat <<EOF
 function $nm_vagrant {
-  ( source $shome/bin/_profile $UBUNTU
+  ( source $shome/libexec/_profile $UBUNTU
     $shome/bin/vagrant -- $nm_vagrant "${dollar}@"
   )
 }

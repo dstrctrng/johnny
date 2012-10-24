@@ -1,4 +1,4 @@
 source :rubygems
 
-gem "HeSYINUvSBZfxqA-veewee", :require => "veewee"
+gem "veewee"
 gem "fog"

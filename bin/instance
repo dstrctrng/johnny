@@ -50,9 +50,11 @@ function main {
     if [[ -f $shome/definitions/$nm_instance/Vagrantfile ]]; then
       vagrant_source="$shome/definitions/$nm_instance"
     else
-      vagrant_source="$shome/definitions/noop"
+      logger_fatal "cannot find a Vagrantfile for $nm_instance"
+      exit 1
     fi
   fi
+
 
   if ! bundle exec vagrant box list | egrep "^$nm_basebox"'$'; then
     bundle exec vagrant box add $nm_basebox boxes/$nm_basebox.box

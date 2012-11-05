@@ -23,8 +23,8 @@ function main {
 
   local nm_veewee=$1; shift
   $shome/bin/instance "${nm_veewee}_" "${nm_veewee}"
-  $shome/bin/vagrant rsync $nm_veewee -- "$UBUNTU/vagrant/$nm_veewee/vagrant.sh" $nm_veewee:
-  $shome/bin/vagrant ssh $nm_veewee -- bash vagrant.sh
+  $shome/bin/vagrant rsync $nm_veewee -- "$UBUNTU/vagrant/$nm_veewee/virtualbox.sh" $nm_veewee:
+  $shome/bin/vagrant ssh $nm_veewee -- bash virtualbox.sh
 
   local ver_veewee="$(cat $shome/definitions/$nm_veewee/VERSION)"
   $shome/bin/package "$nm_veewee"

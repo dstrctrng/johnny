@@ -70,9 +70,9 @@ network: $FLAGS_ip
 gui: $FLAGS_gui
 EOF
 
-  pushd $vagrant_source
+  pushd $vagrant_source > /dev/null
   (export _AO_WORKAREA="$UBUNTU/vagrant/$nm_instance"; bin/deploy localhost)
-  popd
+  popd > /dev/null
 }
 
 # define command line options:

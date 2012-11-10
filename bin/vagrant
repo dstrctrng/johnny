@@ -75,13 +75,13 @@ function main {
     rsync) rsync -ia -e "ssh -F $pth_config" "$@" ;;
 
     vagrant)     
-      pushd $UBUNTU/vagrant/$nm_instance
+      pushd $UBUNTU/vagrant/$nm_instance > /dev/null
       if [[ "$#" < 1 ]]; then
         set -- 'ssh'
       fi
       bundle check 2>&1 >/dev/null || { bundle install --quiet --local --path vendor/bundle || bundle check > /dev/null; }
       bundle exec vagrant "$@" 
-      popd
+      popd > /dev/null
     ;;
   esac
 }

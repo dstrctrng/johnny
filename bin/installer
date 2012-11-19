@@ -18,15 +18,15 @@ require 'bundler'
 function main {
   local nm_base=$1; shift
 
-  local nm_build=$(basename $(ryaml $shome/definitions/$nm_base/definition.yml iso_file) .iso)
+  local nm_build=$(basename $(ryaml $shome/definitions/$nm_base/config/definition.yml iso_file) .iso)
   nm_build="${nm_build/-unattended}"
 
   mkdir -p $shome/mnt/$nm_build.src/{preseed,isolinux}
   chmod u+w $shome/mnt/$nm_build.src/{preseed,isolinux}
   chmod u+w $shome/mnt/$nm_build.src/isolinux/isolinux.bin
 
-  rsync -ia $shome/definitions/$nm_base/preseed.cfg $shome/mnt/$nm_build.src/preseed/
-  rsync -ia $shome/definitions/$nm_base/isolinux.cfg $shome/mnt/$nm_build.src/isolinux/
+  rsync -ia $shome/definitions/$nm_base/share/preseed.cfg $shome/mnt/$nm_build.src/preseed/
+  rsync -ia $shome/definitions/$nm_base/share/isolinux.cfg $shome/mnt/$nm_build.src/isolinux/
 
   pushd $shome/mnt/$nm_build.src
   mkisofs \

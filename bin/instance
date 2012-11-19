@@ -65,7 +65,7 @@ function main {
   cat > "$UBUNTU/vagrant/$nm_instance.yml" <<EOF
 ---
 box: $nm_basebox
-provision: provision.sh
+provision: libexec/provision.sh
 network: $FLAGS_ip
 gui: $FLAGS_gui
 EOF

@@ -57,7 +57,7 @@ function main {
 
 
   if ! bundle exec vagrant box list | egrep "^$nm_basebox"'$'; then
-    bundle exec vagrant box add $nm_basebox boxes/$nm_basebox.box
+    bundle exec vagrant box add $nm_basebox $shome/vault/virtualbox/boxes/$nm_basebox.box
   fi
 
   # configure vagrant.yml

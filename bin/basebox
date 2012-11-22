@@ -37,7 +37,7 @@ function main {
   $shome/bin/instance $nm_distro $nm_basebox
   $shome/bin/package $opt_package $nm_basebox
   bundle exec vagrant box remove $nm_basebox || true
-  bundle exec vagrant box add $nm_basebox $shome/boxes/archive/${nm_basebox}-${ver_basebox}.box
+  bundle exec vagrant box add $nm_basebox $shome/vault/virtualbox/boxes/${nm_basebox}-${ver_basebox}.box
 }
 
 # define command line options:

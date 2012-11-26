@@ -21,23 +21,23 @@ function main {
   local nm_build=$(basename $(ryaml $shome/definitions/$nm_base/config/definition.yml iso_file) .iso)
   nm_build="${nm_build/-unattended}"
 
-  if [[ ! -f "$shome/iso/$nm_build.iso" ]]; then
+  if [[ ! -f "$shome/vault/virtualbox/iso/$nm_build.iso" ]]; then
     local url_build=$(ryaml $shome/definitions/$nm_base/config/definition.yml iso_src)
-    wget -nv -c "$url_build" -O "$shome/iso/$nm_build.iso" || true # 404 does not return error code
+    wget -nv -c "$url_build" -O "$shome/vault/virtualbox/iso/$nm_build.iso" || true # 404 does not return error code
   fi
 
-  if [[ -f "$shome/iso/$nm_build.tar.gz" ]]; then
+  if [[ -f "$shome/vault/virtualbox/iso/$nm_build.tar.gz" ]]; then
     sudo rm -rf "$shome/mnt/$nm_build.mnt"
-    (cd $shome/mnt && tar xvfz "$shome/iso/$nm_build.tar.gz")
+    (cd $shome/mnt && tar xvfz "$shome/vault/virtualbox/iso/$nm_build.tar.gz")
   else
-    hdiutil mount -mountpoint "$shome/mnt/$nm_build.mnt" $shome/iso/$nm_build.iso
+    hdiutil mount -mountpoint "$shome/mnt/$nm_build.mnt" $shome/vault/virtualbox/iso/$nm_build.iso
   fi
 
   sudo rm -rf $shome/mnt/$nm_build.src
   sudo rsync -ia $shome/mnt/$nm_build.mnt/. $shome/mnt/$nm_build.src/
   sudo chown -R $(id -un):$(id -gn) $shome/mnt/$nm_build.src
 
-  if [[ ! -f "$shome/iso/$nm_build.tar.gz" ]]; then
+  if [[ ! -f "$shome/vault/virtualbox/iso/$nm_build.tar.gz" ]]; then
     hdiutil unmount "$shome/mnt/$nm_build.mnt"
   fi
 }

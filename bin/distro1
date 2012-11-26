@@ -25,6 +25,7 @@ function main {
   local ver_veewee="$(cat $shome/definitions/$nm_veewee/VERSION)"
 
   bundle exec vagrant basebox build -f $nm_veewee
+  VBoxManage controlvm $nm_veewee poweroff
   bundle exec vagrant basebox export --force $nm_veewee
   mv $nm_veewee.box $shome/vault/virtualbox/boxes/${nm_veewee}-${ver_veewee}_.box
   VBoxManage unregistervm ${nm_veewee} --delete || true

@@ -26,7 +26,7 @@ function main {
     exit 1
   fi
 
-  local nm_basebox=$1; shift
+  local FLAGS_basebox=$1; shift
   local nm_instance=$1; shift
 
   # check if the instance is already configured
@@ -37,40 +37,21 @@ function main {
     fi
   fi
 
-  # copy vagrant templates
-  local vagrant_source
-  if [[ -n "$FLAGS_definition" ]]; then
-    if [[ -f $shome/definitions/$FLAGS_definition/Vagrantfile ]]; then
-      vagrant_source="$shome/definitions/$FLAGS_definition"
-    else
-      logger_fatal "cannot find a Vagrantfile for $FLAGS_definition"
-      exit 1
-    fi
-  else
-    if [[ -f $shome/definitions/$nm_instance/Vagrantfile ]]; then
-      vagrant_source="$shome/definitions/$nm_instance"
-    else
-      logger_fatal "cannot find a Vagrantfile for $nm_instance"
-      exit 1
-    fi
-  fi
-
-
-  if ! bundle exec vagrant box list | egrep "^$nm_basebox"'$'; then
-    bundle exec vagrant box add $nm_basebox $shome/vault/virtualbox/boxes/$nm_basebox.box
+  if ! bundle exec vagrant box list | egrep "^$FLAGS_basebox"'$'; then
+    bundle exec vagrant box add $FLAGS_basebox $shome/vault/virtualbox/boxes/$FLAGS_basebox.box
   fi
 
   # configure vagrant.yml
   mkdir -p "$UBUNTU/vagrant"
   cat > "$UBUNTU/vagrant/$nm_instance.yml" <<EOF
 ---
-box: $nm_basebox
+box: $FLAGS_basebox
 provision: libexec/provision.sh
 network: $FLAGS_ip
 gui: $FLAGS_gui
 EOF
 
-  pushd $vagrant_source > /dev/null
+  pushd $shome/definitions/$FLAGS_definition > /dev/null
   (export _AO_WORKAREA="$UBUNTU/vagrant/$nm_instance"; bin/deploy localhost)
   popd > /dev/null
 }

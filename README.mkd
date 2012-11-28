@@ -2,8 +2,6 @@ Basebox to Vagrant instances
 ============================
     bin/distro lucid
     bin/basebox lucid generic
-    bin/basebox lucid network
-    bin/instance --destroy --ip 192.168.88.100 --definition osx network dev0
     bin/instance --destroy --ip 192.168.88.101 --definition osx generic dev1
     bin/instance --destroy --ip 192.168.88.102 --definition osx generic dev2
     bin/instance --destroy --ip 192.168.88.103 --definition osx generic dev3

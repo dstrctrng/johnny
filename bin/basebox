@@ -34,7 +34,7 @@ function main {
   if [[ "$FLAGS_destroy" = "$FLAGS_TRUE" ]]; then
     opt_package="--destroy"
   fi
-  $shome/bin/instance $nm_distro $nm_basebox
+  $shome/bin/instance --definition $nm_basebox $nm_distro $nm_basebox
   $shome/bin/package $opt_package $nm_basebox
   bundle exec vagrant box remove $nm_basebox || true
   bundle exec vagrant box add $nm_basebox $shome/vault/virtualbox/boxes/${nm_basebox}-${ver_basebox}.box

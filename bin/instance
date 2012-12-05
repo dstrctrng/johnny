@@ -48,7 +48,7 @@ function main {
 box: $FLAGS_basebox
 provision: libexec/provision.sh
 network: $FLAGS_ip
-external: $FLAGS_extip
+bridge: $FLAGS_bridge
 gui: $FLAGS_gui
 EOF
 
@@ -59,8 +59,8 @@ EOF
 
 # define command line options:
 #   var name, default, description, short option
-DEFINE_string 'ip' '' 'internal ip address'
-DEFINE_string 'extip' '' 'external ip address'
+DEFINE_string 'ip' '' 'internal ip address at eth1'
+DEFINE_booleab 'bridge' '' 'bridged interface at eth2'
 DEFINE_boolean 'destroy' "$FLAGS_FALSE" 'destroy the instance if it exists'
 DEFINE_string 'definition' "" 'Veewee/Vagrant definition' 
 DEFINE_boolean 'gui' "$FLAGS_FALSE" 'Run with VirtualBox GUI'

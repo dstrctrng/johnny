@@ -60,7 +60,7 @@ EOF
 # define command line options:
 #   var name, default, description, short option
 DEFINE_string 'ip' '' 'internal ip address at eth1'
-DEFINE_boolean 'bridge' '' 'bridged interface at eth2'
+DEFINE_boolean 'bridge' "$FLAGS_FALSE" 'bridged interface at eth2'
 DEFINE_boolean 'destroy' "$FLAGS_FALSE" 'destroy the instance if it exists'
 DEFINE_string 'definition' "" 'Veewee/Vagrant definition' 
 DEFINE_boolean 'gui' "$FLAGS_FALSE" 'Run with VirtualBox GUI'

@@ -48,6 +48,7 @@ function main {
 box: $FLAGS_basebox
 provision: libexec/provision.sh
 network: $FLAGS_ip
+external: $FLAGS_extip
 gui: $FLAGS_gui
 EOF
 
@@ -58,7 +59,8 @@ EOF
 
 # define command line options:
 #   var name, default, description, short option
-DEFINE_string 'ip' '' 'ip addresses'
+DEFINE_string 'ip' '' 'internal ip address'
+DEFINE_string 'extip' '' 'external ip address'
 DEFINE_boolean 'destroy' "$FLAGS_FALSE" 'destroy the instance if it exists'
 DEFINE_string 'definition' "" 'Veewee/Vagrant definition' 
 DEFINE_boolean 'gui' "$FLAGS_FALSE" 'Run with VirtualBox GUI'
